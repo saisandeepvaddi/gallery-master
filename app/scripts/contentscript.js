@@ -14,7 +14,32 @@ const getUrls = () => {
   const _images = document.getElementsByTagName("image");
 
   const images = [..._imgs, _images];
-  const srcs = images.map(x => x.src).filter(x => !!x);
+  const srcs = images
+    .map(x => {
+      const { src, srcset } = x;
+      if (!srcset || !srcset.length) {
+        return src;
+      }
+
+      const urls = {};
+
+      const baseLinks = srcset.split(",").map(x => x.trim());
+      let currentDim = 0;
+      let biggerImageUrl = src;
+
+      baseLinks.forEach(link => {
+        const [url, dim] = link.split(" ");
+        const dimension = dim.replace(/[wx]$/g, "");
+        if (Number(dimension) > currentDim) {
+          currentDim = Number(dimension);
+          biggerImageUrl = url;
+        }
+      });
+      console.log("biggerImageUrl:", biggerImageUrl);
+      console.log("src:", src);
+      return biggerImageUrl || src;
+    })
+    .filter(x => !!x);
   return srcs || [];
 };
 
@@ -27,18 +52,14 @@ const createModal = url => {
 getUrls();
 
 browser.runtime.onMessage.addListener(message => {
-  console.log("imageextensionmessage:", message);
   if (message.task && message.task === "collect") {
-    console.log("imageextensionmessage.task:", message.task);
     return Promise.resolve({
       srcs: getUrls() || []
     });
   }
 
   if (message.task && message.task === "zoom") {
-    console.log("imageextensionmessage.task:", message.task);
     const { url } = message.data;
-    console.log("url:", url);
     createModal(url);
     return Promise.resolve({
       srcs: getUrls() || []

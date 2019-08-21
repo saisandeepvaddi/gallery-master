@@ -16,7 +16,7 @@ const getDimensions = url => {
 
       img.src = url;
     } catch (error) {
-      console.log(`getDimensions error: `, error);
+      console.log(`getDimensions error: `, error.message);
       rej(error);
     }
   });
@@ -30,17 +30,6 @@ function PopupHome() {
   const [minHeight, setMinHeight] = React.useState(100);
   const [maxHeight, setMaxHeight] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log(
-        "request, sender, sendResponse:",
-        request,
-        sender,
-        sendResponse
-      );
-    });
-  }, []);
 
   const updateImages = async () => {
     try {
@@ -58,32 +47,23 @@ function PopupHome() {
       const response = await browser.tabs.sendMessage(tab.id, {
         task: "collect"
       });
-      console.log("response:", response);
 
       const image_urls = response.srcs || [];
-      console.log("image_urls:", image_urls);
       const imgMeta = await Promise.all(image_urls.map(getDimensions));
-      console.log("imgMeta:", imgMeta);
 
       const filteredImageUrls = imgMeta
         .filter(meta => {
-          console.log("meta:", meta);
           const { height, width } = meta;
           return height >= minHeight && width >= minWidth;
         })
         .map(x => x.url);
-      console.log("filteredImageUrls:", filteredImageUrls);
       setLoading(false);
       setSrcs(filteredImageUrls);
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
       setLoading(false);
     }
   };
-
-  React.useEffect(() => {
-    updateImages();
-  }, [minWidth, maxWidth, minHeight, maxHeight]);
 
   const onClick = async e => {
     updateImages();
@@ -97,8 +77,8 @@ function PopupHome() {
   };
 
   return (
-    <>
-      <button disabled={loading} onClick={() => onClick()}>
+    <div style={{ width: 800 }}>
+      <button onClick={() => onClick()}>
         {loading ? "Loading" : "Collect Images"}
       </button>
       <button onClick={openOptions}>Open Options</button>
@@ -131,7 +111,6 @@ function PopupHome() {
       </div>
       <div
         style={{
-          width: 800,
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, ${cols}fr)`,
           gridGap: "1px",
@@ -143,15 +122,18 @@ function PopupHome() {
             <span key={i}>
               <img
                 src={src}
-                style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                style={{
+                  objectFit: "cover",
+                  width: "100%",
+                  height: "100%"
+                }}
               />
               ;
             </span>
           );
         })}
       </div>
-      {}
-    </>
+    </div>
   );
 }
 

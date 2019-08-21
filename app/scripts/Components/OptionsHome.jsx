@@ -10,7 +10,6 @@ function OptionsHome() {
   const onClick = e => {
     e.preventDefault();
     browser.storage.local.get(["srcs"]).then(srcs => {
-      console.log("Sources saved: ", srcs);
       const image_urls = srcs.srcs || [];
       const filteredImageUrls = image_urls.filter(url => {
         const img = document.createElement("img");
