@@ -1,0 +1,16 @@
+{
+  "name": "pic-collector",
+  "version": "0.0.1",
+  "description": "Collect Images from webpages you visit",
+  "scripts": {
+    "dev": "webextension-toolbox dev chrome",
+    "build": "webextension-toolbox build chrome"
+  },
+  "devDependencies": {
+    "webextension-toolbox": "latest"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
