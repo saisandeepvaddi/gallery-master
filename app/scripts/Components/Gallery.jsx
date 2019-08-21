@@ -22,11 +22,11 @@ function Gallery({ images }) {
     ReactDOM.render(<React.Fragment />, getContainer());
   };
 
-  React.useEffect(() => {
-    console.log("srcs:", srcs);
-  }, [srcs]);
-
   const updateImages = async urls => {
+    if (!urls || urls.length === 0) {
+      setLoading(false);
+      setSrcs([]);
+    }
     try {
       setLoading(true);
       const imgDimensions = urls.map(getDimensions);
@@ -85,6 +85,9 @@ function Gallery({ images }) {
             value={minHeight}
             onChange={e => setMinHeight(e.target.value || 5)}
           />
+          <button onClick={() => updateImages()}>
+            Fetch with new dimensions
+          </button>
           Cols:
           <input
             type="number"

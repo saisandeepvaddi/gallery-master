@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import Gallery from "./Components/Gallery";
 import { injectContainer, getContainer } from "./shared/utilities";
 
-const isBing =
-  document.location.href.test(/(bing.com)/i) &&
-  document.location.pathname.test(/images/i);
+// const isBing =
+//   document.location.href.test(/(bing.com)/i) &&
+//   document.location.pathname.test(/images/i);
 
 const getUrls = () => {
   const _imgs = document.getElementsByTagName("img");
