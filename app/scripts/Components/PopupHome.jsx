@@ -1,4 +1,5 @@
 import React from "react";
+import { sendMessageToActiveTabContentScript } from "../shared/Messenger";
 
 const getDimensions = url => {
   return new Promise((res, rej) => {
@@ -34,17 +35,7 @@ function PopupHome() {
   const updateImages = async () => {
     try {
       setLoading(true);
-      const tabs = await browser.tabs.query({
-        currentWindow: true,
-        active: true
-      });
-      const tab = tabs.length ? tabs[0] : null;
-
-      if (!tab) {
-        throw new Error("No tabs active");
-      }
-
-      const response = await browser.tabs.sendMessage(tab.id, {
+      const response = await sendMessageToActiveTabContentScript({
         task: "collect"
       });
 
@@ -69,8 +60,11 @@ function PopupHome() {
     updateImages();
   };
 
-  const openOptions = () => {
-    browser.runtime.openOptionsPage();
+  const showGallery = async () => {
+    const response = await sendMessageToActiveTabContentScript({
+      task: "show_gallery"
+    });
+    // browser.runtime.openOptionsPage();
     // browser.tabs.create({
     //   url: "chrome://extensions/?options=" + chrome.runtime.id
     // });
@@ -81,7 +75,7 @@ function PopupHome() {
       <button onClick={() => onClick()}>
         {loading ? "Loading" : "Collect Images"}
       </button>
-      <button onClick={openOptions}>Open Options</button>
+      <button onClick={() => showGallery()}>Show Gallery</button>
       <div className="d-flex">
         Min Width:
         <input

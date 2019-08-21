@@ -1,13 +1,11 @@
-const modalHtml = `
-  <button class="trigger">Click here to trigger the modal!</button>
-    <div class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <div id="image-container">
-            </div>
-        </div>
-    </div>
-`;
+import React from "react";
+import ReactDOM from "react-dom";
+import Gallery from "./Components/Gallery";
+import { injectContainer, getContainer } from "./shared/utilities";
+
+const isBing =
+  document.location.href.test(/(bing.com)/i) &&
+  document.location.pathname.test(/images/i);
 
 const getUrls = () => {
   const _imgs = document.getElementsByTagName("img");
@@ -44,9 +42,11 @@ const getUrls = () => {
 };
 
 const createModal = url => {
-  const modalEl = document.createElement("div");
-  modalEl.id = "imageextensionid";
-  modal.className = "modal";
+  injectContainer();
+
+  const images = getUrls();
+
+  ReactDOM.render(<Gallery images={images} />, getContainer());
 };
 
 getUrls();
@@ -58,9 +58,8 @@ browser.runtime.onMessage.addListener(message => {
     });
   }
 
-  if (message.task && message.task === "zoom") {
-    const { url } = message.data;
-    createModal(url);
+  if (message.task && message.task === "show_gallery") {
+    createModal();
     return Promise.resolve({
       srcs: getUrls() || []
     });
