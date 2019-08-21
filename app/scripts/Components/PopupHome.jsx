@@ -24,11 +24,11 @@ const getDimensions = url => {
 
 function PopupHome() {
   const [srcs, setSrcs] = React.useState([]);
-  const [cols, setCols] = React.useState(2);
-  const [minWidth, setMinWidth] = React.useState(50);
-  const [maxWidth, setMaxWidth] = React.useState(50);
-  const [minHeight, setMinHeight] = React.useState(50);
-  const [maxHeight, setMaxHeight] = React.useState(50);
+  const [cols, setCols] = React.useState(4);
+  const [minWidth, setMinWidth] = React.useState(100);
+  const [maxWidth, setMaxWidth] = React.useState(100);
+  const [minHeight, setMinHeight] = React.useState(100);
+  const [maxHeight, setMaxHeight] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -44,53 +44,46 @@ function PopupHome() {
 
   const updateImages = async () => {
     try {
-      try {
-        setLoading(true);
-        const tabs = await browser.tabs.query({
-          currentWindow: true,
-          active: true
-        });
-        const tab = tabs.length ? tabs[0] : null;
+      setLoading(true);
+      const tabs = await browser.tabs.query({
+        currentWindow: true,
+        active: true
+      });
+      const tab = tabs.length ? tabs[0] : null;
 
-        if (!tab) {
-          throw new Error("No tabs active");
-        }
-
-        const response = await browser.tabs.sendMessage(tab.id, {
-          task: "collect"
-        });
-        console.log("response:", response);
-
-        const image_urls = response.srcs || [];
-        console.log("image_urls:", image_urls);
-        const imgMeta = await Promise.all(image_urls.map(getDimensions));
-        console.log("imgMeta:", imgMeta);
-
-        const filteredImageUrls = imgMeta
-          .filter(meta => {
-            console.log("meta:", meta);
-            const { height, width } = meta;
-            return height >= minHeight && width >= minWidth;
-          })
-          .map(x => x.url);
-        console.log("filteredImageUrls:", filteredImageUrls);
-        setLoading(false);
-        setSrcs(filteredImageUrls);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
+      if (!tab) {
+        throw new Error("No tabs active");
       }
+
+      const response = await browser.tabs.sendMessage(tab.id, {
+        task: "collect"
+      });
+      console.log("response:", response);
+
+      const image_urls = response.srcs || [];
+      console.log("image_urls:", image_urls);
+      const imgMeta = await Promise.all(image_urls.map(getDimensions));
+      console.log("imgMeta:", imgMeta);
+
+      const filteredImageUrls = imgMeta
+        .filter(meta => {
+          console.log("meta:", meta);
+          const { height, width } = meta;
+          return height >= minHeight && width >= minWidth;
+        })
+        .map(x => x.url);
+      console.log("filteredImageUrls:", filteredImageUrls);
+      setLoading(false);
+      setSrcs(filteredImageUrls);
     } catch (error) {
-      console.log(`fetchImages error: `, error);
+      console.error(error);
+      setLoading(false);
     }
   };
 
-  const zoomImage = async () => {
-    try {
-    } catch (error) {
-      console.log(`zoomImage error: `, error);
-    }
-  };
+  React.useEffect(() => {
+    updateImages();
+  }, [minWidth, maxWidth, minHeight, maxHeight]);
 
   const onClick = async e => {
     updateImages();
@@ -110,7 +103,7 @@ function PopupHome() {
       </button>
       <button onClick={openOptions}>Open Options</button>
       <div className="d-flex">
-        Images above:
+        Min Width:
         <input
           type="number"
           placeholder="width"
@@ -118,6 +111,7 @@ function PopupHome() {
           value={minWidth}
           onChange={e => setMinWidth(e.target.value || 5)}
         />
+        Min Height:
         <input
           type="number"
           placeholder="height"
@@ -137,17 +131,21 @@ function PopupHome() {
       </div>
       <div
         style={{
-          width: 800
+          width: 800,
+          display: "grid",
+          gridTemplateColumns: `repeat(${cols}, ${cols}fr)`,
+          gridGap: "1px",
+          gridAutoFlow: "dense"
         }}
-        className="multi-row-flex"
       >
         {srcs.map((src, i) => {
           return (
-            <span
-              key={i}
-              style={{ flex: `0 ${100 / cols}%`, marginBottom: "1%" }}
-            >
-              <img src={src} style={{ objectFit: "cover", width: "80%" }} />;
+            <span key={i}>
+              <img
+                src={src}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
+              />
+              ;
             </span>
           );
         })}
