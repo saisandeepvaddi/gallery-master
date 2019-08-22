@@ -36,7 +36,7 @@ function OptionsBar({
             width="20%"
           />
           <span style={{ padding: 10 }}></span>
-          <span>Min Height</span>
+          <span>Min Height: </span>
           <TextInput
             type="number"
             placeholder="height"

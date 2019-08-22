@@ -58,9 +58,18 @@ function Gallery({ images }) {
       setLoading(true);
       const imagesMeta = urls.map(url => ({ _id: uuid(), src: url }));
 
-      setLoading(false);
-      setImagesMeta(imagesMeta);
+      // Contains all images details
       setInitImagesMeta(imagesMeta);
+
+      // Get images only with min width, height
+      const updatedMeta = await getImagesWithMinDimensions({
+        imagesMeta,
+        minHeight,
+        minWidth,
+      });
+
+      setLoading(false);
+      setImagesMeta(updatedMeta);
     } catch (error) {
       console.error(error.message);
       setImagesMeta([]);
@@ -115,20 +124,28 @@ function Gallery({ images }) {
         {loading ? (
           "Loading"
         ) : (
-          <Grid cols={cols}>
+          <>
             {!imagesMeta || imagesMeta.length === 0 ? (
-              <span>No Images</span>
+              <div
+                className="d-flex justify-center align-center"
+                style={{ padding: 100 }}
+              >
+                No Images found with selected dimensions. Try decreasing Min
+                Width and Min Height.
+              </div>
             ) : (
-              imagesMeta.map((imgMeta, i) => {
-                const { src, _id } = imgMeta;
-                return (
-                  <span key={i}>
-                    <Image _id={_id} src={src} />
-                  </span>
-                );
-              })
+              <Grid cols={cols}>
+                {imagesMeta.map((imgMeta, i) => {
+                  const { src, _id } = imgMeta;
+                  return (
+                    <span key={i}>
+                      <Image _id={_id} src={src} />
+                    </span>
+                  );
+                })}
+              </Grid>
             )}
-          </Grid>
+          </>
         )}
       </Dialog>
     </>
