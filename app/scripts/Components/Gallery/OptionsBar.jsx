@@ -7,12 +7,12 @@ function OptionsBar({
   cols,
   setMinWidth,
   setMinHeight,
-  updateImages,
+  updateImagesWithMinDimensions,
   setCols,
 }) {
   return (
     <>
-      <Pane display="flex" padding={2} background="tint2" borderRadius={3}>
+      <Pane display="flex" padding={10} background="tint2">
         <Pane flex={1} alignItems="center" display="flex">
           <span>Columns: </span>
           <TextInput
@@ -35,6 +35,7 @@ function OptionsBar({
             onChange={e => setMinWidth(e.target.value || 5)}
             width="20%"
           />
+          <span style={{ padding: 10 }}></span>
           <span>Min Height</span>
           <TextInput
             type="number"
@@ -44,8 +45,10 @@ function OptionsBar({
             onChange={e => setMinHeight(e.target.value || 5)}
             width="20%"
           />
-          <Button onClick={() => updateImages()}>
-            Fetch with new dimensions
+          <span style={{ padding: 10 }}></span>
+
+          <Button onClick={() => updateImagesWithMinDimensions()}>
+            Update
           </Button>
         </Pane>
       </Pane>

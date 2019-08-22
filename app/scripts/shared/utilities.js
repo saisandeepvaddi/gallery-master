@@ -1,4 +1,4 @@
-export const getDimensions = url => {
+export const getDimensions = imgMeta => {
   return new Promise((res, rej) => {
     try {
       const img = new Image();
@@ -6,13 +6,13 @@ export const getDimensions = url => {
         const width = this.naturalWidth;
         const height = this.naturalHeight;
         res({
-          url,
+          ...imgMeta,
           width,
           height,
         });
       };
 
-      img.src = url;
+      img.src = imgMeta.src;
     } catch (error) {
       console.log("getDimensions error: ", error.message);
       rej(error);

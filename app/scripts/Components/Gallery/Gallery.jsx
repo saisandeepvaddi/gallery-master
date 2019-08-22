@@ -1,41 +1,44 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import { getDimensions, getPartialResults } from "../../shared/utilities";
+import { getDimensions, getPartialResults } from "../../shared/utilities";
 import { Dialog } from "evergreen-ui";
 import { getContainer } from "../../contentScripts/page";
 import Image from "./Image";
 import Grid from "./Grid";
 import OptionsBar from "./OptionsBar";
+import uuid from "uuid/v4";
+import "lazysizes";
 
-// const getImagesAbove = async ({ urls, minHeight, minWidth }) => {
-//   try {
-//     const imgDimensions = urls.map(getDimensions);
-//     const imgMeta = await getPartialResults(imgDimensions, {
-//       time: 5000,
-//       filter: true,
-//     });
-//     const filteredImageUrls = imgMeta
-//       .filter(meta => {
-//         const { height, width } = meta;
-//         if (!height || !width) {
-//           return false;
-//         }
-//         return height >= minHeight && width >= minWidth;
-//       })
-//       .map(x => x.url);
+const getImagesWithMinDimensions = async ({
+  imagesMeta,
+  minHeight,
+  minWidth,
+}) => {
+  console.log("imagesMeta:", imagesMeta);
+  const imgDimensions = imagesMeta.map(getDimensions);
+  const imgsMetaWithDimensions = await getPartialResults(imgDimensions, {
+    time: 1000,
+    filter: true,
+  });
 
-//     return filteredImageUrls;
-//   } catch (error) {
-//     console.log("getImagesAbove error: ", error);
-//   }
-// };
+  const filteredImagesMeta = imgsMetaWithDimensions.filter(meta => {
+    const { height, width } = meta;
+    if (!height || !width) {
+      return false;
+    }
+    return height >= minHeight && width >= minWidth;
+  });
+
+  return filteredImagesMeta;
+};
 
 function Gallery({ images }) {
-  const [srcs, setSrcs] = React.useState([]);
+  const [initImagesMeta, setInitImagesMeta] = React.useState([]);
+  const [imagesMeta, setImagesMeta] = React.useState([]);
   const [cols, setCols] = React.useState(4);
-  const [minWidth, setMinWidth] = React.useState(100);
+  const [minWidth, setMinWidth] = React.useState(500);
   // const [maxWidth, setMaxWidth] = React.useState(100);
-  const [minHeight, setMinHeight] = React.useState(100);
+  const [minHeight, setMinHeight] = React.useState(500);
   // const [maxHeight, setMaxHeight] = React.useState<OptionsBa
 
   const [loading, setLoading] = React.useState(false);
@@ -47,21 +50,39 @@ function Gallery({ images }) {
   };
 
   const updateImages = async (urls = []) => {
-    console.log("urls:", urls);
     if (!urls || urls.length === 0) {
       setLoading(false);
-      setSrcs([]);
+      setImagesMeta([]);
     }
     try {
       setLoading(true);
-      const filteredImageUrls = urls;
-      console.log("filteredImageUrls:", filteredImageUrls);
+      const imagesMeta = urls.map(url => ({ _id: uuid(), src: url }));
+
       setLoading(false);
-      setSrcs(filteredImageUrls);
+      setImagesMeta(imagesMeta);
+      setInitImagesMeta(imagesMeta);
     } catch (error) {
       console.error(error.message);
-      setSrcs([]);
+      setImagesMeta([]);
       setLoading(false);
+    }
+  };
+
+  const updateImagesWithMinDimensions = async () => {
+    try {
+      setLoading(true);
+      const updatedMeta = await getImagesWithMinDimensions({
+        imagesMeta: initImagesMeta,
+        minHeight,
+        minWidth,
+      });
+      console.log("updatedMeta:", updatedMeta);
+      setLoading(false);
+      setImagesMeta(updatedMeta);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      setImagesMeta([]);
     }
   };
 
@@ -89,18 +110,26 @@ function Gallery({ images }) {
           setCols={setCols}
           setMinWidth={setMinWidth}
           setMinHeight={setMinHeight}
-          updateImages={updateImages}
+          updateImagesWithMinDimensions={updateImagesWithMinDimensions}
         />
-        {loading ? "Loading" : ""}
-        <Grid cols={cols}>
-          {(srcs || []).map((src, i) => {
-            return (
-              <span key={i}>
-                <Image src={src} />
-              </span>
-            );
-          })}
-        </Grid>
+        {loading ? (
+          "Loading"
+        ) : (
+          <Grid cols={cols}>
+            {!imagesMeta || imagesMeta.length === 0 ? (
+              <span>No Images</span>
+            ) : (
+              imagesMeta.map((imgMeta, i) => {
+                const { src, _id } = imgMeta;
+                return (
+                  <span key={i}>
+                    <Image _id={_id} src={src} />
+                  </span>
+                );
+              })
+            )}
+          </Grid>
+        )}
       </Dialog>
     </>
   );

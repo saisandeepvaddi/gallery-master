@@ -1,10 +1,14 @@
 import React from "react";
 
-function Image({ src }) {
+function Image({ src, _id }) {
   return (
     <>
       <img
-        src={src}
+        id={_id}
+        alt="Image Here"
+        src={"http://placehold.it/500"}
+        data-src={src}
+        className="lazyload"
         style={{
           objectFit: "cover",
           width: "100%",
