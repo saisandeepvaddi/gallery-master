@@ -26,7 +26,7 @@ function OptionsBar({
             type="number"
             placeholder="Columns in Grid"
             min="1"
-            max="50"
+            max="10"
             value={cols}
             onChange={e => setCols(e.target.value || 4)}
             width={100}

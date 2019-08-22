@@ -106,6 +106,7 @@ function Gallery({ images }) {
         title="Gallery"
         width="80vw"
         hasFooter={false}
+        shouldCloseOnOverlayClick={false}
         onCloseComplete={() => hideContainer()}
       >
         <OptionsBar
