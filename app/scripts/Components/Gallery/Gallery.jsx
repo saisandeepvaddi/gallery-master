@@ -8,6 +8,7 @@ import Grid from "./Grid";
 import OptionsBar from "./OptionsBar";
 import uuid from "uuid/v4";
 import "lazysizes";
+import Info from "./Info";
 
 const getImagesWithMinDimensions = async ({
   imagesMeta,
@@ -16,7 +17,7 @@ const getImagesWithMinDimensions = async ({
 }) => {
   const imgDimensions = imagesMeta.map(getDimensions);
   const imgsMetaWithDimensions = await getPartialResults(imgDimensions, {
-    time: 1000,
+    time: 5000,
     filter: true,
   });
 
@@ -120,17 +121,14 @@ function Gallery({ images }) {
           updateImagesWithMinDimensions={updateImagesWithMinDimensions}
         />
         {loading ? (
-          "Loading"
+          <Info>Loading...</Info>
         ) : (
           <>
             {!imagesMeta || imagesMeta.length === 0 ? (
-              <div
-                className="d-flex justify-center align-center"
-                style={{ padding: 100 }}
-              >
+              <Info>
                 No Images found with selected dimensions. Try decreasing Min
                 Width and Min Height.
-              </div>
+              </Info>
             ) : (
               <Grid cols={cols}>
                 {imagesMeta.map((imgMeta, i) => {

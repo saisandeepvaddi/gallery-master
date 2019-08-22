@@ -10,6 +10,10 @@ function OptionsBar({
   updateImagesWithMinDimensions,
   setCols,
 }) {
+  const updateImages = e => {
+    e.preventDefault();
+    updateImagesWithMinDimensions();
+  };
   return (
     <>
       <Pane display="flex" padding={10} background="tint2">
@@ -26,30 +30,34 @@ function OptionsBar({
           />
         </Pane>
         <Pane flex={1} alignItems="center" display="flex">
-          <span>Min Width: </span>
-          <TextInput
-            type="number"
-            placeholder="width"
-            min="1"
-            value={minWidth}
-            onChange={e => setMinWidth(e.target.value || 5)}
-            width="20%"
-          />
-          <span style={{ padding: 10 }}></span>
-          <span>Min Height: </span>
-          <TextInput
-            type="number"
-            placeholder="height"
-            min="1"
-            value={minHeight}
-            onChange={e => setMinHeight(e.target.value || 5)}
-            width="20%"
-          />
-          <span style={{ padding: 10 }}></span>
+          <form onSubmit={updateImages}>
+            <span>Min Width: </span>
+            <TextInput
+              type="number"
+              placeholder="width"
+              min="1"
+              step="10"
+              value={minWidth}
+              onChange={e => setMinWidth(e.target.value || 5)}
+              width="20%"
+            />
+            <span style={{ padding: 10 }}></span>
+            <span>Min Height: </span>
+            <TextInput
+              type="number"
+              placeholder="height"
+              min="1"
+              step="10"
+              value={minHeight}
+              onChange={e => setMinHeight(e.target.value || 5)}
+              width="20%"
+            />
+            <span style={{ padding: 10 }}></span>
 
-          <Button onClick={() => updateImagesWithMinDimensions()}>
-            Update
-          </Button>
+            <Button type="submit" onClick={updateImages}>
+              Update
+            </Button>
+          </form>
         </Pane>
       </Pane>
     </>

@@ -1,5 +1,6 @@
 import { common } from "./customImageScripts/common";
 import { bing } from "./customImageScripts/bing";
+import { google } from "./customImageScripts/google";
 
 export const getUrls = (location = null) => {
   const { origin } = location;
@@ -9,9 +10,9 @@ export const getUrls = (location = null) => {
   }
 
   if (/bing/i.test(origin)) {
-    console.log("Bing");
-
     return bing();
+  } else if (/google/i.test(origin)) {
+    return google();
   }
 
   return common();
