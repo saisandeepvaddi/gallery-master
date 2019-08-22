@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { getDimensions, getPartialResults } from "../../shared/utilities";
+import { getImagesWithMinDimensions } from "../../shared/utilities";
 import { Dialog } from "evergreen-ui";
 import { getContainer } from "../../contentScripts/page";
 import Image from "./Image";
@@ -10,36 +10,15 @@ import uuid from "uuid/v4";
 import "lazysizes";
 import Info from "./Info";
 
-const getImagesWithMinDimensions = async ({
-  imagesMeta,
-  minHeight,
-  minWidth,
-}) => {
-  const imgDimensions = imagesMeta.map(getDimensions);
-  const imgsMetaWithDimensions = await getPartialResults(imgDimensions, {
-    time: 5000,
-    filter: true,
-  });
-
-  const filteredImagesMeta = imgsMetaWithDimensions.filter(meta => {
-    const { height, width } = meta;
-    if (!height || !width) {
-      return false;
-    }
-    return height >= minHeight && width >= minWidth;
-  });
-
-  return filteredImagesMeta;
-};
-
 function Gallery({ images }) {
   const [initImagesMeta, setInitImagesMeta] = React.useState([]);
   const [imagesMeta, setImagesMeta] = React.useState([]);
   const [cols, setCols] = React.useState(4);
+  const [loadingTime, setLoadingTime] = React.useState(3);
   const [minWidth, setMinWidth] = React.useState(500);
   // const [maxWidth, setMaxWidth] = React.useState(100);
   const [minHeight, setMinHeight] = React.useState(500);
-  // const [maxHeight, setMaxHeight] = React.useState<OptionsBa
+  // const [maxHeight, setMaxHeight] = React.useState(100)
 
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
@@ -52,17 +31,17 @@ function Gallery({ images }) {
   const updateImages = async (urls = []) => {
     if (!urls || urls.length === 0) {
       setLoading(false);
+      setInitImagesMeta([]);
       setImagesMeta([]);
     }
+
     try {
       setLoading(true);
       const imagesMeta = urls.map(url => ({ _id: uuid(), src: url }));
 
-      // Contains all images details
-      setInitImagesMeta(imagesMeta);
-
       // Get images only with min width, height
       const updatedMeta = await getImagesWithMinDimensions({
+        loadingTime: Number(loadingTime) * 1000,
         imagesMeta,
         minHeight,
         minWidth,
@@ -70,9 +49,25 @@ function Gallery({ images }) {
 
       setLoading(false);
       setImagesMeta(updatedMeta);
+      console.log("updatedMeta:", updatedMeta.length);
+      const updatedMetaIdsMap = {};
+      updatedMeta.forEach(x => {
+        updatedMetaIdsMap[x._id] = x;
+      });
+      const allImagesMetaWithDimentions = imagesMeta.map(img => {
+        const existingImg = updatedMetaIdsMap[img._id];
+        return existingImg ? existingImg : img;
+      });
+      // Contains all images details
+      console.log(
+        "allImagesMetaWithDimentions:",
+        allImagesMetaWithDimentions.length
+      );
+      setInitImagesMeta(allImagesMetaWithDimentions);
     } catch (error) {
       console.error(error.message);
       setImagesMeta([]);
+      setInitImagesMeta([]);
       setLoading(false);
     }
   };
@@ -81,11 +76,13 @@ function Gallery({ images }) {
     try {
       setLoading(true);
       const updatedMeta = await getImagesWithMinDimensions({
+        loadingTime: Number(loadingTime) * 1000,
         imagesMeta: initImagesMeta,
         minHeight,
         minWidth,
       });
       setLoading(false);
+      console.log("updatedMeta after change:", updatedMeta);
       setImagesMeta(updatedMeta);
     } catch (error) {
       console.error(error);
@@ -112,10 +109,13 @@ function Gallery({ images }) {
         onCloseComplete={() => hideContainer()}
       >
         <OptionsBar
+          loading={loading}
           minWidth={minWidth}
           minHeight={minHeight}
           cols={cols}
           setCols={setCols}
+          loadingTime={loadingTime}
+          setLoadingTime={setLoadingTime}
           setMinWidth={setMinWidth}
           setMinHeight={setMinHeight}
           updateImagesWithMinDimensions={updateImagesWithMinDimensions}

@@ -1,11 +1,18 @@
 export const getDimensions = imgMeta => {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     try {
+      // If already has height and width (found in last load)
+      const { height, width } = imgMeta;
+
+      if (height && width) {
+        resolve(imgMeta);
+      }
+
       const img = new Image();
       img.onload = function() {
         const width = this.naturalWidth;
         const height = this.naturalHeight;
-        res({
+        resolve({
           ...imgMeta,
           width,
           height,
@@ -15,7 +22,7 @@ export const getDimensions = imgMeta => {
       img.src = imgMeta.src;
     } catch (error) {
       console.log("getDimensions error: ", error.message);
-      rej(error);
+      reject(error);
     }
   });
 };
@@ -57,4 +64,27 @@ export const getPartialResults = async (
   }
 
   return filteredResults;
+};
+
+export const getImagesWithMinDimensions = async ({
+  imagesMeta,
+  minHeight,
+  minWidth,
+  loadingTime,
+}) => {
+  const imgDimensions = imagesMeta.map(getDimensions);
+  const imgsMetaWithDimensions = await getPartialResults(imgDimensions, {
+    time: loadingTime || 5000,
+    filter: true,
+  });
+
+  const filteredImagesMeta = imgsMetaWithDimensions.filter(meta => {
+    const { height, width } = meta;
+    if (!height || !width) {
+      return false;
+    }
+    return height >= minHeight && width >= minWidth;
+  });
+
+  return filteredImagesMeta;
 };
