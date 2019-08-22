@@ -19,8 +19,6 @@ const getUrls = () => {
         return src;
       }
 
-      const urls = {};
-
       const baseLinks = srcset.split(",").map(x => x.trim());
       let currentDim = 0;
       let biggerImageUrl = src;
@@ -41,7 +39,7 @@ const getUrls = () => {
   return srcs || [];
 };
 
-const createModal = url => {
+const createModal = () => {
   injectContainer();
 
   const images = getUrls();
@@ -54,14 +52,14 @@ getUrls();
 browser.runtime.onMessage.addListener(message => {
   if (message.task && message.task === "collect") {
     return Promise.resolve({
-      srcs: getUrls() || []
+      srcs: getUrls() || [],
     });
   }
 
   if (message.task && message.task === "show_gallery") {
     createModal();
     return Promise.resolve({
-      srcs: getUrls() || []
+      srcs: getUrls() || [],
     });
   }
 });

@@ -3,10 +3,20 @@
   "version": "0.0.1",
   "description": "Collect Images from webpages you visit",
   "scripts": {
-    "dev": "webextension-toolbox dev chrome",
-    "build": "webextension-toolbox build chrome"
+    "dev:chrome": "webextension-toolbox dev chrome",
+    "build:chrome": "webextension-toolbox build chrome",
+    "dev:firefox": "webextension-toolbox dev firefox",
+    "build:firefox": "webextension-toolbox build firefox",
+    "lint": "./node_modules/.bin/eslint --ext .js,.jsx app/scripts/**/*"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.2.1",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "prettier": "^1.18.2",
     "webextension-toolbox": "latest"
   },
   "dependencies": {

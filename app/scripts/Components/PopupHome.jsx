@@ -11,13 +11,13 @@ const getDimensions = url => {
         res({
           url,
           width,
-          height
+          height,
         });
       };
 
       img.src = url;
     } catch (error) {
-      console.log(`getDimensions error: `, error.message);
+      console.log("getDimensions error: ", error.message);
       rej(error);
     }
   });
@@ -27,16 +27,16 @@ function PopupHome() {
   const [srcs, setSrcs] = React.useState([]);
   const [cols, setCols] = React.useState(4);
   const [minWidth, setMinWidth] = React.useState(100);
-  const [maxWidth, setMaxWidth] = React.useState(100);
+  // const [maxWidth, setMaxWidth] = React.useState(100);
   const [minHeight, setMinHeight] = React.useState(100);
-  const [maxHeight, setMaxHeight] = React.useState(100);
+  // const [maxHeight, setMaxHeight] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
 
   const updateImages = async () => {
     try {
       setLoading(true);
       const response = await sendMessageToActiveTabContentScript({
-        task: "collect"
+        task: "collect",
       });
 
       const image_urls = response.srcs || [];
@@ -57,12 +57,13 @@ function PopupHome() {
   };
 
   const onClick = async e => {
+    e.preventDefault();
     updateImages();
   };
 
   const showGallery = async () => {
-    const response = await sendMessageToActiveTabContentScript({
-      task: "show_gallery"
+    await sendMessageToActiveTabContentScript({
+      task: "show_gallery",
     });
     // browser.runtime.openOptionsPage();
     // browser.tabs.create({
@@ -108,7 +109,7 @@ function PopupHome() {
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, ${cols}fr)`,
           gridGap: "1px",
-          gridAutoFlow: "dense"
+          gridAutoFlow: "dense",
         }}
       >
         {srcs.map((src, i) => {
@@ -119,7 +120,7 @@ function PopupHome() {
                 style={{
                   objectFit: "cover",
                   width: "100%",
-                  height: "100%"
+                  height: "100%",
                 }}
               />
               ;

@@ -3,9 +3,9 @@ import React from "react";
 function OptionsHome() {
   const [srcs, setSrcs] = React.useState([]);
   const [minWidth, setMinWidth] = React.useState(50);
-  const [maxWidth, setMaxWidth] = React.useState(50);
+  // const [maxWidth, setMaxWidth] = React.useState(50);
   const [minHeight, setMinHeight] = React.useState(50);
-  const [maxHeight, setMaxHeight] = React.useState(50);
+  // const [maxHeight, setMaxHeight] = React.useState(50);
 
   const onClick = e => {
     e.preventDefault();
@@ -45,7 +45,7 @@ function OptionsHome() {
       <div
         style={{
           width: "100%",
-          height: "100%"
+          height: "100%",
         }}
         className="multi-row-flex"
       >

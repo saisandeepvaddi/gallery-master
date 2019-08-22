@@ -2,7 +2,7 @@ export const sendMessageToActiveTabContentScript = async message => {
   try {
     const tabs = await browser.tabs.query({
       currentWindow: true,
-      active: true
+      active: true,
     });
     const tab = tabs.length ? tabs[0] : null;
 
@@ -14,7 +14,7 @@ export const sendMessageToActiveTabContentScript = async message => {
 
     return response;
   } catch (error) {
-    console.log(`sendMessageToActiveTab error: `, error);
+    console.log("sendMessageToActiveTab error: ", error);
     throw error;
   }
 };

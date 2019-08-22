@@ -22,13 +22,13 @@ export const getDimensions = url => {
         res({
           url,
           width,
-          height
+          height,
         });
       };
 
       img.src = url;
     } catch (error) {
-      console.log(`getDimensions error: `, error.message);
+      console.log("getDimensions error: ", error.message);
       rej(error);
     }
   });
@@ -44,8 +44,8 @@ const partialPromises = (promises, time, resolveWith) =>
           resolve(resolveWith);
         }, time);
         return timer;
-      })
-    ]).catch(e => new Promise(resolve => resolve(resolveWith)));
+      }),
+    ]).catch(() => new Promise(resolve => resolve(resolveWith)));
   });
 
 export const getPartialResults = async (
@@ -53,11 +53,11 @@ export const getPartialResults = async (
   options = {
     time: 2000,
     resolveWith: 1,
-    filter: true
+    filter: true,
   }
 ) => {
   if (!Array.isArray(promises)) {
-    throw new Error(`getPartialResults: promises must be array of promises`);
+    throw new Error("getPartialResults: promises must be array of promises");
   }
   const time = options.time || 2000;
   const resolveWith = options.resolveWith || 1;

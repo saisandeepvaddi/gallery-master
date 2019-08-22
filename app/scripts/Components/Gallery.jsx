@@ -3,17 +3,17 @@ import ReactDOM from "react-dom";
 import {
   getContainer,
   getDimensions,
-  getPartialResults
+  getPartialResults,
 } from "../shared/utilities";
-import { Button, Dialog } from "evergreen-ui";
+import { Dialog } from "evergreen-ui";
 
 function Gallery({ images }) {
   const [srcs, setSrcs] = React.useState([]);
   const [cols, setCols] = React.useState(4);
   const [minWidth, setMinWidth] = React.useState(100);
-  const [maxWidth, setMaxWidth] = React.useState(100);
+  // const [maxWidth, setMaxWidth] = React.useState(100);
   const [minHeight, setMinHeight] = React.useState(100);
-  const [maxHeight, setMaxHeight] = React.useState(100);
+  // const [maxHeight, setMaxHeight] = React.useState(100);
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
 
@@ -32,7 +32,7 @@ function Gallery({ images }) {
       const imgDimensions = urls.map(getDimensions);
       const imgMeta = await getPartialResults(imgDimensions, {
         time: 5000,
-        filter: true
+        filter: true,
       });
       const filteredImageUrls = imgMeta
         .filter(meta => {
@@ -104,7 +104,7 @@ function Gallery({ images }) {
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, ${cols}fr)`,
             gridGap: "1px",
-            gridAutoFlow: "dense"
+            gridAutoFlow: "dense",
           }}
         >
           {srcs.map((src, i) => {
@@ -115,7 +115,7 @@ function Gallery({ images }) {
                   style={{
                     objectFit: "cover",
                     width: "100%",
-                    height: "100%"
+                    height: "100%",
                   }}
                 />
               </span>

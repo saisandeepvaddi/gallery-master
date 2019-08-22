@@ -1,0 +1,37 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "allowImportExportEverywhere": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["eslint-plugin-prettier", "react", "react-hooks"],
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "off",
+    "no-console": "off",
+    "no-debugger": "error",
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "no-undef": "error",
+    "no-unused-vars": "error",
+    "eqeqeq": "error",
+    "no-var": "error",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "linebreak-style": "off",
+    "no-nested-ternary": "off",
+    "consistent-return": "off",
+    "no-use-before-define": "error"
+  },
+  "globals": {
+    "browser": true,
+    "chrome": true
+  }
+}
