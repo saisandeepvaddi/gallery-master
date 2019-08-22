@@ -1,65 +1,82 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Gallery from "./Components/Gallery";
-import { injectContainer, getContainer } from "./shared/utilities";
+import { getUrls } from "./contentScripts/images";
+import { startGallery } from "./contentScripts/gallery";
+import { MESSAGE_TYPES } from "./shared/Constants";
+import { injectContainer } from "./contentScripts/page";
 
-// const isBing =
-//   document.location.href.test(/(bing.com)/i) &&
-//   document.location.pathname.test(/images/i);
+/**
+ * Entrypoint for Content Script
+ *
+ * @class ContentScript
+ */
+class ContentScript {
+  imageUrls = [];
 
-const getUrls = () => {
-  const _imgs = document.getElementsByTagName("img");
-  const _images = document.getElementsByTagName("image");
+  /**
+   * Initializes the tasks of content script.
+   * This is the first function to run in content script.
+   *
+   * @memberof ContentScript
+   */
+  initialize = () => {
+    this.initializeContentScriptListeners();
+  };
 
-  const images = [..._imgs, _images];
-  const srcs = images
-    .map(x => {
-      const { src, srcset } = x;
-      if (!srcset || !srcset.length) {
-        return src;
+  /**
+   * Initializes ContentScript Message Listeners
+   *
+   * @memberof ContentScript
+   */
+  initializeContentScriptListeners = async () => {
+    browser.runtime.onMessage.addListener(message => {
+      if (!message.task) {
+        return Promise.reject("Task not mentioned");
       }
 
-      const baseLinks = srcset.split(",").map(x => x.trim());
-      let currentDim = 0;
-      let biggerImageUrl = src;
-
-      baseLinks.forEach(link => {
-        const [url, dim] = link.split(" ");
-        const dimension = dim.replace(/[wx]$/g, "");
-        if (Number(dimension) > currentDim) {
-          currentDim = Number(dimension);
-          biggerImageUrl = url;
+      switch (message.task) {
+        case MESSAGE_TYPES.COLLECT_IMAGES: {
+          return Promise.resolve({ srcs: this.getImageUrls() });
         }
-      });
-      console.log("biggerImageUrl:", biggerImageUrl);
-      console.log("src:", src);
-      return biggerImageUrl || src;
-    })
-    .filter(x => !!x);
-  return srcs || [];
-};
+        case MESSAGE_TYPES.SHOW_GALLERY: {
+          this.showGallery();
+          return Promise.resolve(true);
+        }
 
-const createModal = () => {
-  injectContainer();
-
-  const images = getUrls();
-
-  ReactDOM.render(<Gallery images={images} />, getContainer());
-};
-
-getUrls();
-
-browser.runtime.onMessage.addListener(message => {
-  if (message.task && message.task === "collect") {
-    return Promise.resolve({
-      srcs: getUrls() || [],
+        default:
+          return Promise.reject("Task did not match any options");
+      }
     });
-  }
+  };
 
-  if (message.task && message.task === "show_gallery") {
-    createModal();
-    return Promise.resolve({
-      srcs: getUrls() || [],
-    });
-  }
-});
+  /**
+   * Collects the image urls in the active page.
+   *
+   * @memberof ContentScript
+   */
+  getImageUrls = async () => {
+    try {
+      const urls = await getUrls();
+      this.imageUrls = urls;
+      return urls;
+    } catch (error) {
+      this.imageUrls = [];
+      console.log("error:", error);
+    }
+  };
+
+  /**
+   * Starts the gallery with the collected images.
+   *
+   * @memberof ContentScript
+   */
+  showGallery = () => {
+    // Injects extension's DOM element into the page.
+    // This element will the root element for extension's content script UI.
+    injectContainer();
+
+    // Attach container again if someone removed container again.
+    startGallery(this.imageUrls);
+  };
+}
+
+const contentScript = new ContentScript();
+contentScript.initialize();

@@ -1,17 +1,3 @@
-const containerId = "imgextension-container";
-
-export const injectContainer = () => {
-  if (document.getElementById(containerId)) {
-    return;
-  }
-  const el = document.createElement("div");
-  el.id = containerId;
-
-  document.body.appendChild(el);
-};
-
-export const getContainer = () => document.getElementById(containerId);
-
 export const getDimensions = url => {
   return new Promise((res, rej) => {
     try {

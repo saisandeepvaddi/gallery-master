@@ -1,10 +1,9 @@
 import { sendMessageToActiveTabContentScript } from "./shared/Messenger";
+import { MESSAGE_TYPES } from "./shared/Constants";
 
 browser.browserAction.onClicked.addListener(tab => {
-  console.log("tab:", tab);
-  console.log("Clicking");
-
+  console.log("Browser Action clicked on Tab:", tab);
   sendMessageToActiveTabContentScript({
-    task: "show_gallery",
+    task: MESSAGE_TYPES.SHOW_GALLERY,
   });
 });

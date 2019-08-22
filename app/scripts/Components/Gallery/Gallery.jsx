@@ -1,11 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {
-  getContainer,
-  getDimensions,
-  getPartialResults,
-} from "../shared/utilities";
+import { getDimensions, getPartialResults } from "../../shared/utilities";
 import { Dialog } from "evergreen-ui";
+import { getContainer } from "../../contentScripts/page";
 
 function Gallery({ images }) {
   const [srcs, setSrcs] = React.useState([]);

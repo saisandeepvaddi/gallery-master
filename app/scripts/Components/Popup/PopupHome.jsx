@@ -1,5 +1,5 @@
 import React from "react";
-import { sendMessageToActiveTabContentScript } from "../shared/Messenger";
+import { sendMessageToActiveTabContentScript } from "../../shared/Messenger";
 
 const getDimensions = url => {
   return new Promise((res, rej) => {
