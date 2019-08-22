@@ -1,7 +1,7 @@
 import { getUrls } from "./contentScripts/images";
 import { startGallery } from "./contentScripts/gallery";
 import { MESSAGE_TYPES } from "./shared/Constants";
-import { injectContainer } from "./contentScripts/page";
+import { injectContainer, getPageDetails } from "./contentScripts/page";
 
 /**
  * Entrypoint for Content Script
@@ -48,13 +48,26 @@ class ContentScript {
   };
 
   /**
+   * Gets the page location details.
+   * This is only origin, pathname, href of document.location
+   *
+   * @memberof ContentScript
+   */
+  getLocationDetails = () => {
+    const location = getPageDetails();
+    this.location = location;
+    return location;
+  };
+
+  /**
    * Collects the image urls in the active page.
    *
    * @memberof ContentScript
    */
   getImageUrls = async () => {
     try {
-      const urls = await getUrls();
+      const location = this.getLocationDetails();
+      const urls = await getUrls(location);
       this.imageUrls = urls;
       return urls;
     } catch (error) {

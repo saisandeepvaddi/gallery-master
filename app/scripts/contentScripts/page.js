@@ -21,3 +21,9 @@ export const getContainer = () => {
 
   return document.getElementById(containerId);
 };
+
+export const getPageDetails = () => {
+  const { origin, pathname, href } = document.location;
+
+  return { origin, pathname, href };
+};

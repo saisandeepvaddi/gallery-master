@@ -1,29 +1,18 @@
-export const getUrls = () => {
-  const _imgs = document.getElementsByTagName("img");
-  const _images = document.getElementsByTagName("image");
+import { common } from "./customImageScripts/common";
+import { bing } from "./customImageScripts/bing";
 
-  const images = [..._imgs, _images];
-  const srcs = images
-    .map(x => {
-      const { src, srcset } = x;
-      if (!srcset || !srcset.length) {
-        return src;
-      }
+export const getUrls = (location = null) => {
+  const { origin } = location;
 
-      const baseLinks = srcset.split(",").map(x => x.trim());
-      let currentDim = 0;
-      let biggerImageUrl = src;
+  if (!origin) {
+    return common();
+  }
 
-      baseLinks.forEach(link => {
-        const [url, dim] = link.split(" ");
-        const dimension = dim.replace(/[wx]$/g, "");
-        if (Number(dimension) > currentDim) {
-          currentDim = Number(dimension);
-          biggerImageUrl = url;
-        }
-      });
-      return biggerImageUrl || src;
-    })
-    .filter(x => !!x);
-  return srcs || [];
+  if (/bing/i.test(origin)) {
+    console.log("Bing");
+
+    return bing();
+  }
+
+  return common();
 };

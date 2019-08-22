@@ -14,7 +14,6 @@ const getImagesWithMinDimensions = async ({
   minHeight,
   minWidth,
 }) => {
-  console.log("imagesMeta:", imagesMeta);
   const imgDimensions = imagesMeta.map(getDimensions);
   const imgsMetaWithDimensions = await getPartialResults(imgDimensions, {
     time: 1000,
@@ -85,7 +84,6 @@ function Gallery({ images }) {
         minHeight,
         minWidth,
       });
-      console.log("updatedMeta:", updatedMeta);
       setLoading(false);
       setImagesMeta(updatedMeta);
     } catch (error) {
