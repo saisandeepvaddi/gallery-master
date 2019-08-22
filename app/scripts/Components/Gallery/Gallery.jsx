@@ -1,8 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { getDimensions, getPartialResults } from "../../shared/utilities";
+// import { getDimensions, getPartialResults } from "../../shared/utilities";
 import { Dialog } from "evergreen-ui";
 import { getContainer } from "../../contentScripts/page";
+import Image from "./Image";
+import Grid from "./Grid";
+import OptionsBar from "./OptionsBar";
+
+// const getImagesAbove = async ({ urls, minHeight, minWidth }) => {
+//   try {
+//     const imgDimensions = urls.map(getDimensions);
+//     const imgMeta = await getPartialResults(imgDimensions, {
+//       time: 5000,
+//       filter: true,
+//     });
+//     const filteredImageUrls = imgMeta
+//       .filter(meta => {
+//         const { height, width } = meta;
+//         if (!height || !width) {
+//           return false;
+//         }
+//         return height >= minHeight && width >= minWidth;
+//       })
+//       .map(x => x.url);
+
+//     return filteredImageUrls;
+//   } catch (error) {
+//     console.log("getImagesAbove error: ", error);
+//   }
+// };
 
 function Gallery({ images }) {
   const [srcs, setSrcs] = React.useState([]);
@@ -10,7 +36,8 @@ function Gallery({ images }) {
   const [minWidth, setMinWidth] = React.useState(100);
   // const [maxWidth, setMaxWidth] = React.useState(100);
   const [minHeight, setMinHeight] = React.useState(100);
-  // const [maxHeight, setMaxHeight] = React.useState(100);
+  // const [maxHeight, setMaxHeight] = React.useState<OptionsBa
+
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
 
@@ -19,31 +46,21 @@ function Gallery({ images }) {
     ReactDOM.render(<React.Fragment />, getContainer());
   };
 
-  const updateImages = async urls => {
+  const updateImages = async (urls = []) => {
+    console.log("urls:", urls);
     if (!urls || urls.length === 0) {
       setLoading(false);
       setSrcs([]);
     }
     try {
       setLoading(true);
-      const imgDimensions = urls.map(getDimensions);
-      const imgMeta = await getPartialResults(imgDimensions, {
-        time: 5000,
-        filter: true,
-      });
-      const filteredImageUrls = imgMeta
-        .filter(meta => {
-          const { height, width } = meta;
-          if (!height || !width) {
-            return false;
-          }
-          return height >= minHeight && width >= minWidth;
-        })
-        .map(x => x.url);
+      const filteredImageUrls = urls;
+      console.log("filteredImageUrls:", filteredImageUrls);
       setLoading(false);
       setSrcs(filteredImageUrls);
     } catch (error) {
       console.error(error.message);
+      setSrcs([]);
       setLoading(false);
     }
   };
@@ -65,60 +82,25 @@ function Gallery({ images }) {
         hasFooter={false}
         onCloseComplete={() => hideContainer()}
       >
-        <div className="d-flex">
-          Min Width:
-          <input
-            type="number"
-            placeholder="width"
-            min="1"
-            value={minWidth}
-            onChange={e => setMinWidth(e.target.value || 5)}
-          />
-          Min Height:
-          <input
-            type="number"
-            placeholder="height"
-            min="1"
-            value={minHeight}
-            onChange={e => setMinHeight(e.target.value || 5)}
-          />
-          <button onClick={() => updateImages()}>
-            Fetch with new dimensions
-          </button>
-          Cols:
-          <input
-            type="number"
-            placeholder="height"
-            min="1"
-            max="10"
-            value={cols}
-            onChange={e => setCols(e.target.value || 2)}
-          />
-        </div>
+        <OptionsBar
+          minWidth={minWidth}
+          minHeight={minHeight}
+          cols={cols}
+          setCols={setCols}
+          setMinWidth={setMinWidth}
+          setMinHeight={setMinHeight}
+          updateImages={updateImages}
+        />
         {loading ? "Loading" : ""}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${cols}, ${cols}fr)`,
-            gridGap: "1px",
-            gridAutoFlow: "dense",
-          }}
-        >
-          {srcs.map((src, i) => {
+        <Grid cols={cols}>
+          {(srcs || []).map((src, i) => {
             return (
               <span key={i}>
-                <img
-                  src={src}
-                  style={{
-                    objectFit: "cover",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                />
+                <Image src={src} />
               </span>
             );
           })}
-        </div>
+        </Grid>
       </Dialog>
     </>
   );

@@ -68,13 +68,15 @@ class ContentScript {
    *
    * @memberof ContentScript
    */
-  showGallery = () => {
+  showGallery = async () => {
     // Injects extension's DOM element into the page.
     // This element will the root element for extension's content script UI.
     injectContainer();
 
+    const imageUrls = await this.getImageUrls();
+
     // Attach container again if someone removed container again.
-    startGallery(this.imageUrls);
+    startGallery(imageUrls);
   };
 }
 
