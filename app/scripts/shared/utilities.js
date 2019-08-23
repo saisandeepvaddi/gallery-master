@@ -1,5 +1,4 @@
 import JSZip from "jszip";
-import JSZipUtils from "jszip-utils";
 import { saveAs } from "file-saver";
 
 export const getDimensions = imgMeta => {
@@ -93,38 +92,34 @@ export const getImagesWithMinDimensions = async ({
   return filteredImagesMeta;
 };
 
-function urlToPromise(url) {
-  return new Promise(function(resolve, reject) {
-    JSZipUtils.getBinaryContent(url, function(err, data) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-}
-
 export const downloadImages = async images => {
-  const zip = new JSZip();
-  const imgFolder = zip.folder("images");
-  images.forEach(imgMeta => {
-    const { src } = imgMeta;
-    const filename = src.replace(/.*\//g, "");
-    imgFolder.file(filename, urlToPromise(src), { binary: true });
-  });
+  try {
+    const zip = new JSZip();
+    const imgFolder = zip.folder("images");
+    await Promise.all(
+      images.map(async imgMeta => {
+        const { src } = imgMeta;
+        const filename = src.replace(/.*\//g, "");
+        try {
+          const res = await fetch(src);
+          const blob = res.blob();
+          imgFolder.file(filename, blob, { binary: true });
+        } catch (error) {
+          console.log("promiseError:", error);
+        }
+      })
+    );
 
-  const blob = await imgFolder.generateAsync(
-    { type: "blob" },
-    function updateCallback(metadata) {
-      let msg = "progression : " + metadata.percent.toFixed(2) + " %";
-      if (metadata.currentFile) {
-        msg += ", current file = " + metadata.currentFile;
+    imgFolder.generateAsync({ type: "blob" }).then(
+      blob => {
+        console.log("blob:", blob);
+        saveAs(blob, "images.zip");
+      },
+      function(e) {
+        console.log("Weird: ", e);
       }
-      console.log(msg);
-      //updatePercent(metadata.percent | 0);
-    }
-  );
-
-  saveAs(blob, "images.zip");
+    );
+  } catch (error) {
+    console.log("download error:", error);
+  }
 };
