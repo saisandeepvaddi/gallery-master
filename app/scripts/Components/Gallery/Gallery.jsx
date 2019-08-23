@@ -9,8 +9,10 @@ import OptionsBar from "./OptionsBar";
 import uuid from "uuid/v4";
 import "lazysizes";
 import Info from "./Info";
+import { useImages } from "../../shared/ImageStore";
 
-function Gallery({ images }) {
+function Gallery() {
+  const { images } = useImages();
   const [initImagesMeta, setInitImagesMeta] = React.useState([]);
   const [imagesMeta, setImagesMeta] = React.useState([]);
   const [cols, setCols] = React.useState(4);
@@ -49,7 +51,6 @@ function Gallery({ images }) {
 
       setLoading(false);
       setImagesMeta(updatedMeta);
-      console.log("updatedMeta:", updatedMeta.length);
       const updatedMetaIdsMap = {};
       updatedMeta.forEach(x => {
         updatedMetaIdsMap[x._id] = x;
@@ -58,11 +59,9 @@ function Gallery({ images }) {
         const existingImg = updatedMetaIdsMap[img._id];
         return existingImg ? existingImg : img;
       });
+
       // Contains all images details
-      console.log(
-        "allImagesMetaWithDimentions:",
-        allImagesMetaWithDimentions.length
-      );
+
       setInitImagesMeta(allImagesMetaWithDimentions);
     } catch (error) {
       console.error(error.message);
@@ -132,11 +131,11 @@ function Gallery({ images }) {
               </Info>
             ) : (
               <Grid cols={cols}>
-                {imagesMeta.map((imgMeta, i) => {
-                  const { src, _id } = imgMeta;
+                {imagesMeta.map(imgMeta => {
+                  const { _id } = imgMeta;
                   return (
-                    <span key={i}>
-                      <Image _id={_id} src={src} />
+                    <span key={_id}>
+                      <Image imgMeta={imgMeta} />
                     </span>
                   );
                 })}

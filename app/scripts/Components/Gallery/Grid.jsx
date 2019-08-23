@@ -7,7 +7,7 @@ function Grid({ cols, children }) {
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, ${cols}fr)`,
-          gridGap: "1px",
+          gridGap: "1em",
           gridAutoFlow: "dense",
         }}
       >
