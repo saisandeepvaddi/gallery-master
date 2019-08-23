@@ -34,7 +34,7 @@ export const downloadImagesFromURLs = async images => {
         }
         browser.downloads.download({
           url: urlOfBlob,
-          filename: "imgs.zip",
+          filename: "images.zip",
           conflictAction: "uniquify",
         });
         browser.downloads.onChanged.addListener(handleDownloadFinish);
