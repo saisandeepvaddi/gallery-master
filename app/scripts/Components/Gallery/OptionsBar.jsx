@@ -1,5 +1,7 @@
 import React from "react";
 import { Pane, TextInput, Button } from "evergreen-ui";
+import { useImages } from "../../shared/ImageStore";
+import { downloadImages } from "../../shared/utilities";
 
 function OptionsBar({
   minWidth,
@@ -12,7 +14,59 @@ function OptionsBar({
   loading,
   loadingTime,
   setLoadingTime,
+  imagesMeta,
 }) {
+  const { selectedImages, setSelectedImages } = useImages();
+  const [isDownloading, setIsDownloading] = React.useState(false);
+  const [disableDownload, setDisableDownload] = React.useState(false);
+  const [isAllSelected, setIsAllSelected] = React.useState(false);
+
+  const disableDownloadButton = () => {
+    const isDownloadDisabled =
+      !selectedImages || selectedImages.length === 0 || isDownloading;
+    setDisableDownload(isDownloadDisabled);
+  };
+
+  React.useEffect(() => {
+    disableDownloadButton();
+  }, [selectedImages, isDownloading]);
+
+  React.useEffect(() => {
+    if (imagesMeta.length === selectedImages.length && imagesMeta.length > 0) {
+      setIsAllSelected(true);
+    } else {
+      setIsAllSelected(false);
+    }
+  }, [selectedImages]);
+
+  const downloadSelectedImages = async () => {
+    try {
+      setIsDownloading(true);
+      await downloadImages(selectedImages);
+      setIsDownloading(false);
+    } catch (error) {
+      setIsDownloading(false);
+      console.log("error:", error);
+    }
+  };
+
+  const selectAllImages = () => {
+    setSelectedImages(imagesMeta);
+  };
+
+  const unselectAllImages = () => {
+    setSelectedImages([]);
+  };
+
+  const handleSelectAllButton = e => {
+    e.preventDefault();
+    if (isAllSelected) {
+      unselectAllImages();
+    } else {
+      selectAllImages();
+    }
+  };
+
   const updateImages = e => {
     e.preventDefault();
     updateImagesWithMinDimensions();
@@ -29,10 +83,15 @@ function OptionsBar({
             max="10"
             value={cols}
             onChange={e => setCols(e.target.value || 4)}
-            width={100}
+            width={50}
           />
         </Pane>
-        <Pane style={{ margin: "0 auto" }} alignItems="center" display="flex">
+        <Pane
+          width="100%"
+          justifyContent="flex-end"
+          alignItems="center"
+          display="flex"
+        >
           <form onSubmit={updateImages}>
             <span>Max Time: </span>
             <TextInput
@@ -72,6 +131,24 @@ function OptionsBar({
               Update
             </Button>
           </form>
+          <span style={{ padding: 10 }}></span>
+          <Button
+            appearance={"minimal"}
+            iconBefore="small-tick"
+            onClick={handleSelectAllButton}
+            disabled={loading || !imagesMeta || imagesMeta.length === 0}
+          >
+            {isAllSelected ? "Unselect All" : "Select All"}
+          </Button>
+          <span style={{ padding: 10 }}></span>
+          <Button
+            appearance={disableDownload ? "default" : "primary"}
+            iconBefore="download"
+            onClick={downloadSelectedImages}
+            disabled={disableDownload}
+          >
+            {disableDownload ? "Select images to download" : "Download"}
+          </Button>
         </Pane>
       </Pane>
     </>

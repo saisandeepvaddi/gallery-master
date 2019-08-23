@@ -119,6 +119,7 @@ function Gallery() {
           setMinWidth={setMinWidth}
           setMinHeight={setMinHeight}
           updateImagesWithMinDimensions={updateImagesWithMinDimensions}
+          imagesMeta={imagesMeta}
         />
         {loading ? (
           <Info>Loading...</Info>

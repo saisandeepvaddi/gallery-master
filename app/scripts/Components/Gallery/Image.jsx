@@ -3,16 +3,16 @@ import { useImages } from "../../shared/ImageStore";
 
 function Image({ imgMeta }) {
   const { selectedImages, setSelectedImages } = useImages();
-  const [isSelected, setIsSelected] = React.useState(false);
   const { _id, src } = imgMeta;
+
+  const isThisImageSelected = !!selectedImages.find(x => x._id === _id);
 
   const handleClick = e => {
     e.preventDefault();
 
-    setIsSelected(!isSelected);
-    const isAlreadyInSelectedImages = !!selectedImages.find(x => x._id === _id);
+    const isAlreadyInSelectedImages = isThisImageSelected;
     if (!isAlreadyInSelectedImages) {
-      const thisImageAddedArray = [...selectedImages, { _id, src }];
+      const thisImageAddedArray = [...selectedImages, { ...imgMeta }];
       setSelectedImages(thisImageAddedArray);
     } else {
       const thisImageRemovedArray = [...selectedImages].filter(
@@ -32,7 +32,7 @@ function Image({ imgMeta }) {
         data-src={src}
         className="lazyload"
         style={{
-          border: isSelected ? "3px solid #407cca" : "none",
+          border: isThisImageSelected ? "3px solid #407cca" : "none",
           objectFit: "cover",
           width: "100%",
           height: "100%",

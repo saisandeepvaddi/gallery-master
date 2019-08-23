@@ -1,3 +1,7 @@
+import JSZip from "jszip";
+import JSZipUtils from "jszip-utils";
+import { saveAs } from "file-saver";
+
 export const getDimensions = imgMeta => {
   return new Promise((resolve, reject) => {
     try {
@@ -87,4 +91,40 @@ export const getImagesWithMinDimensions = async ({
   });
 
   return filteredImagesMeta;
+};
+
+function urlToPromise(url) {
+  return new Promise(function(resolve, reject) {
+    JSZipUtils.getBinaryContent(url, function(err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
+export const downloadImages = async images => {
+  const zip = new JSZip();
+  const imgFolder = zip.folder("images");
+  images.forEach(imgMeta => {
+    const { src } = imgMeta;
+    const filename = src.replace(/.*\//g, "");
+    imgFolder.file(filename, urlToPromise(src), { binary: true });
+  });
+
+  const blob = await imgFolder.generateAsync(
+    { type: "blob" },
+    function updateCallback(metadata) {
+      let msg = "progression : " + metadata.percent.toFixed(2) + " %";
+      if (metadata.currentFile) {
+        msg += ", current file = " + metadata.currentFile;
+      }
+      console.log(msg);
+      //updatePercent(metadata.percent | 0);
+    }
+  );
+
+  saveAs(blob, "images.zip");
 };
