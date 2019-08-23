@@ -1,5 +1,4 @@
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
+import { MESSAGE_TYPES } from "./Constants";
 
 export const getDimensions = imgMeta => {
   return new Promise((resolve, reject) => {
@@ -94,31 +93,10 @@ export const getImagesWithMinDimensions = async ({
 
 export const downloadImages = async images => {
   try {
-    const zip = new JSZip();
-    const imgFolder = zip.folder("images");
-    await Promise.all(
-      images.map(async imgMeta => {
-        const { src } = imgMeta;
-        const filename = src.replace(/.*\//g, "");
-        try {
-          const res = await fetch(src);
-          const blob = res.blob();
-          imgFolder.file(filename, blob, { binary: true });
-        } catch (error) {
-          console.log("promiseError:", error);
-        }
-      })
-    );
-
-    imgFolder.generateAsync({ type: "blob" }).then(
-      blob => {
-        console.log("blob:", blob);
-        saveAs(blob, "images.zip");
-      },
-      function(e) {
-        console.log("Weird: ", e);
-      }
-    );
+    browser.runtime.sendMessage({
+      images,
+      type: MESSAGE_TYPES.DOWNLOAD_IMAGES,
+    });
   } catch (error) {
     console.log("download error:", error);
   }

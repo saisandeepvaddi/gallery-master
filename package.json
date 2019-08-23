@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "evergreen-ui": "^4.18.1",
-    "file-saver": "^2.0.2",
     "jszip": "^3.2.2",
     "lazysizes": "^5.1.1",
     "partial-promises": "^1.0.2",

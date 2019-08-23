@@ -85,6 +85,8 @@ function OptionsBar({
             onChange={e => setCols(e.target.value || 4)}
             width={50}
           />
+          <span style={{ padding: 10 }}></span>
+          {imagesMeta.length || 0} images found
         </Pane>
         <Pane
           width="100%"
