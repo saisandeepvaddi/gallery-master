@@ -103,7 +103,7 @@ function Gallery() {
       <Dialog
         isShown={showGalleryDialog}
         title="Gallery"
-        width="80vw"
+        width="90vw"
         hasFooter={false}
         shouldCloseOnOverlayClick={false}
         onCloseComplete={() => hideContainer()}
