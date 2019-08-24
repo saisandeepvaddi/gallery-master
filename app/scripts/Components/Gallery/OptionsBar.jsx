@@ -76,14 +76,14 @@ function OptionsBar({
       <Pane display="flex" padding={10} background="tint2">
         <Pane alignItems="center" display="flex">
           <span>Columns: </span>
-          <TextInput
-            type="number"
+          <input
+            type="range"
             placeholder="Columns in Grid"
             min="1"
             max="10"
             value={cols}
             onChange={e => setCols(e.target.value || 4)}
-            width={50}
+            style={{ maxWidth: 200 }}
           />
           <span style={{ padding: 10 }}></span>
           {imagesMeta.length || 0} images found
