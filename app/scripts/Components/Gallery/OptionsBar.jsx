@@ -129,12 +129,18 @@ function OptionsBar({
             />
             <span style={{ padding: 10 }}></span>
 
-            <Button type="submit" onClick={updateImages} disabled={loading}>
+            <Button
+              className="truncate"
+              type="submit"
+              onClick={updateImages}
+              disabled={loading}
+            >
               Update
             </Button>
           </form>
           <span style={{ padding: 10 }}></span>
           <Button
+            className="truncate"
             appearance={"minimal"}
             iconBefore="small-tick"
             onClick={handleSelectAllButton}
@@ -144,6 +150,7 @@ function OptionsBar({
           </Button>
           <span style={{ padding: 10 }}></span>
           <Button
+            className="truncate"
             appearance={disableDownload ? "default" : "primary"}
             iconBefore="download"
             onClick={downloadSelectedImages}

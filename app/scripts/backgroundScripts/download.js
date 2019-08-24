@@ -14,7 +14,14 @@ export const downloadImagesFromURLs = async images => {
         try {
           const res = await fetch(src);
           const blob = await res.blob();
-          imgFolder.file(filename, blob, { binary: true });
+          // sometimes image file links do not end with img format extensions.
+          // use jpeg for them.
+          const _fixedFileName = /.*\.(jpg|jpeg|png|gif|svg|tiff|raw|exif|bmp|webp)$/gi.test(
+            filename
+          )
+            ? filename
+            : `${filename}.jpg`;
+          imgFolder.file(_fixedFileName, blob, { binary: true });
         } catch (error) {
           console.log(`Failed to fetch: ${src}`);
           console.log("promiseError:", error);
@@ -22,27 +29,32 @@ export const downloadImagesFromURLs = async images => {
       })
     );
 
-    imgFolder.generateAsync({ type: "blob" }).then(
-      blob => {
-        console.log("blob:", blob);
-        const urlOfBlob = URL.createObjectURL(blob);
-        function handleDownloadFinish(delta) {
-          if (delta.state && delta.state.current === "complete") {
-            console.log(`Download ${delta.id} has completed.`);
-            URL.revokeObjectURL(urlOfBlob);
+    imgFolder
+      .generateAsync({ type: "blob" }, function updateCallback(metadata) {
+        const percent = metadata.percent.toFixed(2);
+        console.log("Download: " + percent + "%");
+      })
+      .then(
+        blob => {
+          console.log("blob:", blob);
+          const urlOfBlob = URL.createObjectURL(blob);
+          function handleDownloadFinish(delta) {
+            if (delta.state && delta.state.current === "complete") {
+              console.log(`Download ${delta.id} has completed.`);
+              URL.revokeObjectURL(urlOfBlob);
+            }
           }
+          browser.downloads.download({
+            url: urlOfBlob,
+            filename: "images.zip",
+            conflictAction: "uniquify",
+          });
+          browser.downloads.onChanged.addListener(handleDownloadFinish);
+        },
+        function(e) {
+          console.log("Failed to zip images file: ", e);
         }
-        browser.downloads.download({
-          url: urlOfBlob,
-          filename: "images.zip",
-          conflictAction: "uniquify",
-        });
-        browser.downloads.onChanged.addListener(handleDownloadFinish);
-      },
-      function(e) {
-        console.log("Failed to zip images file: ", e);
-      }
-    );
+      );
   } catch (error) {
     console.log("download error:", error);
   }

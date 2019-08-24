@@ -15,7 +15,7 @@ function Gallery() {
   const { images } = useImages();
   const [initImagesMeta, setInitImagesMeta] = React.useState([]);
   const [imagesMeta, setImagesMeta] = React.useState([]);
-  const [cols, setCols] = React.useState(4);
+  const [cols, setCols] = React.useState(5);
   const [loadingTime, setLoadingTime] = React.useState(5);
   const [minWidth, setMinWidth] = React.useState(500);
   // const [maxWidth, setMaxWidth] = React.useState(100);

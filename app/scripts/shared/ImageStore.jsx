@@ -5,6 +5,7 @@ const ImageContext = React.createContext({});
 const ImageProvider = props => {
   const [images, setImages] = React.useState(props.images || []);
   const [selectedImages, setSelectedImages] = React.useState([]);
+  const [downloadProgress, setDownloadProgress] = React.useState(-1);
 
   React.useEffect(() => {
     console.log("Selected Images: ", selectedImages);
@@ -16,8 +17,17 @@ const ImageProvider = props => {
       setImages,
       selectedImages,
       setSelectedImages,
+      downloadProgress,
+      setDownloadProgress,
     }),
-    [images, setImages, selectedImages, setSelectedImages]
+    [
+      images,
+      setImages,
+      selectedImages,
+      setSelectedImages,
+      downloadProgress,
+      setDownloadProgress,
+    ]
   );
 
   return (

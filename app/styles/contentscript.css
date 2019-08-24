@@ -48,3 +48,9 @@
 .flex-wrap {
   flex-wrap: wrap;
 }
+
+button.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
