@@ -155,6 +155,7 @@ function OptionsBar({
             iconBefore="download"
             onClick={downloadSelectedImages}
             disabled={disableDownload}
+            id="ext-download-button"
           >
             {disableDownload ? "Select images to download" : "Download"}
           </Button>

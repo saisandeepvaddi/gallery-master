@@ -1,4 +1,6 @@
 import JSZip from "jszip";
+import { sendMessageToActiveTabContentScript } from "../shared/Messenger";
+import { MESSAGE_TYPES } from "../shared/Constants";
 
 export const downloadImagesFromURLs = async images => {
   try {
@@ -33,6 +35,14 @@ export const downloadImagesFromURLs = async images => {
       .generateAsync({ type: "blob" }, function updateCallback(metadata) {
         const percent = metadata.percent.toFixed(2);
         console.log("Download: " + percent + "%");
+        try {
+          sendMessageToActiveTabContentScript({
+            task: MESSAGE_TYPES.DOWNLOAD_PROGRESS_UPDATE,
+            progress: percent,
+          });
+        } catch (error) {
+          console.log("error:", error);
+        }
       })
       .then(
         blob => {

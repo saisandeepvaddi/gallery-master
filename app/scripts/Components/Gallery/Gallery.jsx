@@ -122,7 +122,7 @@ function Gallery() {
           imagesMeta={imagesMeta}
         />
         {loading ? (
-          <Info>Loading...</Info>
+          <Info>Collecting Images...</Info>
         ) : (
           <>
             {!imagesMeta || imagesMeta.length === 0 ? (

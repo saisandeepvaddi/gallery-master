@@ -10,6 +10,8 @@ import { injectContainer, getPageDetails } from "./contentScripts/page";
  */
 class ContentScript {
   imageUrls = [];
+  messagePort = null;
+  listeners = [];
 
   /**
    * Initializes the tasks of content script.
@@ -40,6 +42,11 @@ class ContentScript {
           this.showGallery();
           return Promise.resolve(true);
         }
+        case MESSAGE_TYPES.DOWNLOAD_PROGRESS_UPDATE: {
+          const { progress } = message;
+          this.updateDownloadProgress(progress);
+          return Promise.resolve(true);
+        }
 
         default:
           return Promise.reject("Task did not match any options");
@@ -57,6 +64,22 @@ class ContentScript {
     const location = getPageDetails();
     this.location = location;
     return location;
+  };
+
+  /**
+   * Updates progress text on button.
+   *
+   * @memberof ContentScript
+   */
+
+  updateDownloadProgress = progress => {
+    const btn = document.getElementById("ext-download-button");
+    console.log("progress:", progress);
+    if (!progress || Number(progress) >= 100) {
+      btn.innerHTML = "Download";
+    } else {
+      btn.innerHTML = `<b>${progress}%</b>&nbsp;packing`;
+    }
   };
 
   /**
