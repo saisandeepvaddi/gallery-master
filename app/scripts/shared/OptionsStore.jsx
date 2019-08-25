@@ -6,6 +6,8 @@ const OptionsContext = React.createContext({});
 function OptionsProvider(props) {
   const [options, setOptions] = React.useState({});
 
+  const setDefaults = async () => {};
+
   React.useEffect(() => {
     const getOptions = async () => {
       const allOptions = await getDataFromStorage(["options"]);

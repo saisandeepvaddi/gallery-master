@@ -1,5 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import OptionsPage from "./OptionsComponents";
+import { OptionsProvider } from "./shared/OptionsStore";
 
-ReactDOM.render(<OptionsPage />, document.getElementById("root"));
+ReactDOM.render(
+  <OptionsProvider>
+    <OptionsPage />
+  </OptionsProvider>,
+
+  document.getElementById("root")
+);
