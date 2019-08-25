@@ -137,7 +137,7 @@ function Gallery() {
                 {imagesMeta.map(imgMeta => {
                   const { _id } = imgMeta;
                   return (
-                    <span key={_id}>
+                    <span key={_id} style={{ minHeight: 250 }}>
                       <Image imgMeta={imgMeta} />
                     </span>
                   );
