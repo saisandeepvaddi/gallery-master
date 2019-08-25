@@ -1,7 +1,11 @@
 const containerId = "imgextension-container";
+const zoomContainerId = "imgextension-zoom-container";
 
 export const isExtensionContainerAttached = () =>
   document.getElementById(containerId) !== null;
+
+export const isZoomContainerAttached = () =>
+  document.getElementById(zoomContainerId) !== null;
 
 export const injectContainer = () => {
   if (isExtensionContainerAttached()) {
@@ -10,6 +14,17 @@ export const injectContainer = () => {
 
   const el = document.createElement("div");
   el.id = containerId;
+
+  document.body.appendChild(el);
+};
+
+export const injectZoomContainer = () => {
+  if (isZoomContainerAttached()) {
+    return;
+  }
+
+  const el = document.createElement("div");
+  el.id = zoomContainerId;
 
   document.body.appendChild(el);
 };
@@ -24,6 +39,12 @@ export const getContainer = () => {
 
 export const getPageDetails = () => {
   const { origin, pathname, href } = document.location;
-
   return { origin, pathname, href };
+};
+
+export const getZoomContainer = () => {
+  if (!isZoomContainerAttached()) {
+    injectZoomContainer();
+  }
+  return document.getElementById(zoomContainerId);
 };

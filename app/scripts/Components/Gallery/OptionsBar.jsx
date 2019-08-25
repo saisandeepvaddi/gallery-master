@@ -121,7 +121,7 @@ function OptionsBar({
               width={100}
             />
             <span style={{ padding: 10 }}></span>
-            <span>Min Width: </span>
+            <span title="Minimum Width of Images to show">W: </span>
             <TextInput
               type="number"
               placeholder="width"
@@ -129,10 +129,10 @@ function OptionsBar({
               step="10"
               value={minWidth}
               onChange={e => setMinWidth(e.target.value || 5)}
-              width={100}
+              width={80}
             />
             <span style={{ padding: 10 }}></span>
-            <span>Min Height: </span>
+            <span title="Minimum Height of Images to show">H: </span>
             <TextInput
               type="number"
               placeholder="height"
@@ -140,7 +140,7 @@ function OptionsBar({
               step="10"
               value={minHeight}
               onChange={e => setMinHeight(e.target.value || 5)}
-              width={100}
+              width={80}
             />
             <span style={{ padding: 10 }}></span>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { useImages } from "../../shared/ImageStore";
+import { startZoom } from "../Zoom";
 
 function Image({ imgMeta }) {
   const { selectedImages, setSelectedImages } = useImages();
@@ -22,10 +23,18 @@ function Image({ imgMeta }) {
     }
   };
 
+  const handleDoubleClick = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    startZoom(imgMeta);
+  };
+
   return (
     <>
       <img
         onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         id={_id}
         alt="Image Here"
         src={"http://placehold.it/500"}
