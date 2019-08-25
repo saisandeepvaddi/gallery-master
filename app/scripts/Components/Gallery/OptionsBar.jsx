@@ -2,6 +2,7 @@ import React from "react";
 import { Pane, TextInput, Button } from "evergreen-ui";
 import { useImages } from "../../shared/ImageStore";
 import { downloadImages } from "../../shared/utilities";
+import { useOptions } from "../../shared/OptionsStore";
 
 function OptionsBar({
   minWidth,
@@ -20,6 +21,17 @@ function OptionsBar({
   const [isDownloading, setIsDownloading] = React.useState(false);
   const [disableDownload, setDisableDownload] = React.useState(false);
   const [isAllSelected, setIsAllSelected] = React.useState(false);
+  const { setOption, options } = useOptions();
+
+  React.useEffect(() => {
+    const { cols: optionsCols } = options;
+
+    if (optionsCols && optionsCols !== cols) {
+      setCols(optionsCols);
+    }
+
+    console.log("options: ", options);
+  }, [options]);
 
   const disableDownloadButton = () => {
     const isDownloadDisabled =
@@ -82,7 +94,10 @@ function OptionsBar({
             min="1"
             max="10"
             value={cols}
-            onChange={e => setCols(e.target.value || 4)}
+            onChange={e => {
+              setCols(e.target.value || 4);
+              setOption("cols", e.target.value);
+            }}
             style={{ maxWidth: 200 }}
           />
           <span style={{ padding: 10 }}></span>

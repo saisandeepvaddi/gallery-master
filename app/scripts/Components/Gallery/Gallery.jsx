@@ -98,6 +98,20 @@ function Gallery() {
     updateImages(images || []);
   }, [images]);
 
+  const optionsBarProps = {
+    loading,
+    minWidth,
+    minHeight,
+    cols,
+    setCols,
+    loadingTime,
+    setLoadingTime,
+    setMinWidth,
+    setMinHeight,
+    updateImagesWithMinDimensions,
+    imagesMeta,
+  };
+
   return (
     <>
       <Dialog
@@ -108,19 +122,7 @@ function Gallery() {
         shouldCloseOnOverlayClick={false}
         onCloseComplete={() => hideContainer()}
       >
-        <OptionsBar
-          loading={loading}
-          minWidth={minWidth}
-          minHeight={minHeight}
-          cols={cols}
-          setCols={setCols}
-          loadingTime={loadingTime}
-          setLoadingTime={setLoadingTime}
-          setMinWidth={setMinWidth}
-          setMinHeight={setMinHeight}
-          updateImagesWithMinDimensions={updateImagesWithMinDimensions}
-          imagesMeta={imagesMeta}
-        />
+        <OptionsBar {...optionsBarProps} />
         {loading ? (
           <Info>Collecting Images...</Info>
         ) : (
