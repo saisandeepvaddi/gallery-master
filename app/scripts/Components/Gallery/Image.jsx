@@ -45,6 +45,7 @@ function Image({ imgMeta }) {
           objectFit: "cover",
           width: "100%",
           height: "100%",
+          opacity: 1,
         }}
       />
     </>
