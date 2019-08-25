@@ -7,10 +7,6 @@ const ImageProvider = props => {
   const [selectedImages, setSelectedImages] = React.useState([]);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
 
-  React.useEffect(() => {
-    console.log("Selected Images: ", selectedImages);
-  }, [selectedImages]);
-
   const value = React.useMemo(
     () => ({
       images,

@@ -2,6 +2,7 @@ import React from "react";
 import { Pane, TextInput, Button } from "evergreen-ui";
 import { useImages } from "../../shared/ImageStore";
 import { downloadImages } from "../../shared/utilities";
+import { useOptions } from "../../shared/OptionsStore";
 
 function OptionsBar({
   minWidth,
@@ -20,6 +21,17 @@ function OptionsBar({
   const [isDownloading, setIsDownloading] = React.useState(false);
   const [disableDownload, setDisableDownload] = React.useState(false);
   const [isAllSelected, setIsAllSelected] = React.useState(false);
+  const { setOption, options } = useOptions();
+
+  React.useEffect(() => {
+    const { cols: optionsCols } = options;
+
+    if (optionsCols && optionsCols !== cols) {
+      setCols(optionsCols);
+    }
+
+    console.log("options: ", options);
+  }, [options]);
 
   const disableDownloadButton = () => {
     const isDownloadDisabled =
@@ -82,7 +94,10 @@ function OptionsBar({
             min="1"
             max="10"
             value={cols}
-            onChange={e => setCols(e.target.value || 4)}
+            onChange={e => {
+              setCols(e.target.value || 4);
+              setOption("cols", e.target.value);
+            }}
             style={{ maxWidth: 200 }}
           />
           <span style={{ padding: 10 }}></span>
@@ -106,7 +121,7 @@ function OptionsBar({
               width={100}
             />
             <span style={{ padding: 10 }}></span>
-            <span>Min Width: </span>
+            <span title="Minimum Width of Images to show">W: </span>
             <TextInput
               type="number"
               placeholder="width"
@@ -114,10 +129,10 @@ function OptionsBar({
               step="10"
               value={minWidth}
               onChange={e => setMinWidth(e.target.value || 5)}
-              width={100}
+              width={80}
             />
             <span style={{ padding: 10 }}></span>
-            <span>Min Height: </span>
+            <span title="Minimum Height of Images to show">H: </span>
             <TextInput
               type="number"
               placeholder="height"
@@ -125,7 +140,7 @@ function OptionsBar({
               step="10"
               value={minHeight}
               onChange={e => setMinHeight(e.target.value || 5)}
-              width={100}
+              width={80}
             />
             <span style={{ padding: 10 }}></span>
 
