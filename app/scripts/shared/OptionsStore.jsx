@@ -3,15 +3,22 @@ import { getDataFromStorage, setDataToStorage } from "./store";
 
 const OptionsContext = React.createContext({});
 
+const defaultOptions = {
+  cols: 4,
+};
+
 function OptionsProvider(props) {
   const [options, setOptions] = React.useState({});
-
-  const setDefaults = async () => {};
 
   React.useEffect(() => {
     const getOptions = async () => {
       const allOptions = await getDataFromStorage(["options"]);
-      setOptions(allOptions.options);
+      if (!allOptions || !allOptions.options) {
+        setDataToStorage({ options: defaultOptions });
+        setOptions(defaultOptions);
+      } else {
+        setOptions(allOptions.options);
+      }
     };
 
     getOptions();
