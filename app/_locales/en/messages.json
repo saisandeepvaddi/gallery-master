@@ -1,18 +1,18 @@
 {
   "appName": {
-    "message": "pic collector",
+    "message": "Gallery Master",
     "description": "The name of the application"
   },
   "appShortName": {
-    "message": "pic collect",
+    "message": "Gallery Master",
     "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
   },
   "appDescription": {
     "message": "Collect Images from webpages you visit",
-    "description": "The description of the application"
+    "description": "Collects images from the webpages you visit and creates a gallery out of them. Supports downloading images, adding to Pinterest."
   },
   "browserActionTitle": {
-    "message": "pic collector",
+    "message": "Gallery Master",
     "description": "The title of the browser action button"
   }
 }

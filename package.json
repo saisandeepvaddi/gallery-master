@@ -1,5 +1,5 @@
 {
-  "name": "pic-collector",
+  "name": "gallery-master",
   "version": "0.0.1",
   "description": "Collect Images from webpages you visit",
   "scripts": {
@@ -7,6 +7,10 @@
     "build:chrome": "webextension-toolbox build chrome",
     "dev:firefox": "webextension-toolbox dev firefox",
     "build:firefox": "webextension-toolbox build firefox",
+    "dev:opera": "webextension-toolbox dev opera",
+    "build:opera": "webextension-toolbox build opera",
+    "dev:edge": "webextension-toolbox dev edge",
+    "build:edge": "webextension-toolbox build edge",
     "lint": "./node_modules/.bin/eslint --ext .js,.jsx app/scripts/**/*"
   },
   "devDependencies": {
