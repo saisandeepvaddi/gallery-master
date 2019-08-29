@@ -1,15 +1,18 @@
 import React from "react";
 import { useImages } from "../../shared/ImageStore";
 import { startZoom } from "../Zoom";
+import { Button } from "evergreen-ui";
 
 function Image({ imgMeta }) {
   const { selectedImages, setSelectedImages } = useImages();
   const { _id, src } = imgMeta;
+  const [showPinterest, setShowPinterest] = React.useState(false);
 
   const isThisImageSelected = !!selectedImages.find(x => x._id === _id);
 
   const handleClick = e => {
     e.preventDefault();
+    console.log("pin: ", window.window);
 
     const isAlreadyInSelectedImages = isThisImageSelected;
     if (!isAlreadyInSelectedImages) {
@@ -30,24 +33,59 @@ function Image({ imgMeta }) {
     startZoom(imgMeta);
   };
 
+  const handleMouseEnter = () => {
+    setShowPinterest(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowPinterest(false);
+  };
+
+  const handlePinSave = e => {
+    e.preventDefault();
+    try {
+      window.PinUtils.pinOne({
+        media: src,
+      });
+    } catch (error) {
+      console.log("pinterest error:", error);
+    }
+  };
+
   return (
     <>
-      <img
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-        id={_id}
-        alt="Image Here"
-        src={"http://placehold.it/500"}
-        data-src={src}
-        className="lazyload"
-        style={{
-          border: isThisImageSelected ? "3px solid #407cca" : "none",
-          objectFit: "cover",
-          width: "100%",
-          height: "100%",
-          opacity: 1,
-        }}
-      />
+      <div
+        className="p-relative h-100 w-100"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {showPinterest ? (
+          <div className="p-absolute" style={{ top: 10, right: 10 }}>
+            <Button
+              onClick={handlePinSave}
+              style={{ background: "#E60023", color: "white" }}
+            >
+              Pinterest
+            </Button>
+          </div>
+        ) : null}
+        <img
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
+          id={_id}
+          alt="Image Here"
+          src={"http://placehold.it/500"}
+          data-src={src}
+          className="lazyload"
+          style={{
+            border: isThisImageSelected ? "3px solid #407cca" : "none",
+            objectFit: "cover",
+            width: "100%",
+            height: "100%",
+            opacity: 1,
+          }}
+        />
+      </div>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { getUrls } from "./contentScripts/images";
 import { startGallery } from "./contentScripts/gallery";
 import { MESSAGE_TYPES } from "./shared/Constants";
 import { injectContainer, getPageDetails } from "./contentScripts/page";
+import "./pinterest";
 
 /**
  * Entrypoint for Content Script

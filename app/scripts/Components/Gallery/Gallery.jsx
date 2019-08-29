@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { getImagesWithMinDimensions } from "../../shared/utilities";
-import { Dialog } from "evergreen-ui";
+import { Dialog, Pane } from "evergreen-ui";
 import { getContainer } from "../../contentScripts/page";
 import Image from "./Image";
 import Grid from "./Grid";
@@ -16,11 +16,13 @@ function Gallery() {
   const [initImagesMeta, setInitImagesMeta] = React.useState([]);
   const [imagesMeta, setImagesMeta] = React.useState([]);
   const [cols, setCols] = React.useState(5);
-  const [loadingTime, setLoadingTime] = React.useState(5);
+  const [loadingTime, setLoadingTime] = React.useState(1);
   const [minWidth, setMinWidth] = React.useState(300);
   // const [maxWidth, setMaxWidth] = React.useState(1000);
   const [minHeight, setMinHeight] = React.useState(300);
   // const [maxHeight, setMaxHeight] = React.useState(1000)
+
+  React.useEffect(() => {}, []);
 
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
@@ -126,25 +128,27 @@ function Gallery() {
         {loading ? (
           <Info>Collecting Images...</Info>
         ) : (
-          <>
-            {!imagesMeta || imagesMeta.length === 0 ? (
-              <Info>
-                No Images found with selected dimensions. Try decreasing Min
-                Width and Min Height.
-              </Info>
-            ) : (
-              <Grid cols={cols}>
-                {imagesMeta.map(imgMeta => {
-                  const { _id } = imgMeta;
-                  return (
-                    <span key={_id} style={{ minHeight: 250 }}>
-                      <Image imgMeta={imgMeta} />
-                    </span>
-                  );
-                })}
-              </Grid>
-            )}
-          </>
+          <Pane height="90vh">
+            <>
+              {!imagesMeta || imagesMeta.length === 0 ? (
+                <Info>
+                  No Images found with selected dimensions. Try decreasing Min
+                  Width and Min Height.
+                </Info>
+              ) : (
+                <Grid cols={cols}>
+                  {imagesMeta.map(imgMeta => {
+                    const { _id } = imgMeta;
+                    return (
+                      <span key={_id} style={{ minHeight: 250 }}>
+                        <Image imgMeta={imgMeta} />
+                      </span>
+                    );
+                  })}
+                </Grid>
+              )}
+            </>
+          </Pane>
         )}
       </Dialog>
     </>
