@@ -5,7 +5,7 @@ import { Button } from "evergreen-ui";
 
 function Image({ imgMeta }) {
   const { selectedImages, setSelectedImages } = useImages();
-  const { _id, src } = imgMeta;
+  const { _id, src, alt } = imgMeta;
   const [showPinterest, setShowPinterest] = React.useState(false);
 
   const isThisImageSelected = !!selectedImages.find(x => x._id === _id);
@@ -46,6 +46,7 @@ function Image({ imgMeta }) {
     try {
       window.PinUtils.pinOne({
         media: src,
+        description: alt || "",
       });
     } catch (error) {
       console.log("pinterest error:", error);
@@ -73,7 +74,7 @@ function Image({ imgMeta }) {
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
           id={_id}
-          alt="Image Here"
+          alt={alt || "Image Here"}
           src={"http://placehold.it/500"}
           data-src={src}
           className="lazyload"

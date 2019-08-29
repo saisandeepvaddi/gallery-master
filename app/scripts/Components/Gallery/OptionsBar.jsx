@@ -101,7 +101,9 @@ function OptionsBar({
             style={{ maxWidth: 200 }}
           />
           <span style={{ padding: 10 }}></span>
-          {imagesMeta.length || 0} images found
+          <span style={{ width: 100 }}>
+            {imagesMeta.length || 0} images found
+          </span>
         </Pane>
         <Pane
           width="100%"

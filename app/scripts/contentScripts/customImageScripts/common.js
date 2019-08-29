@@ -5,9 +5,9 @@ export const common = () => {
   const images = [..._imgs, _images];
   const srcs = images
     .map(x => {
-      const { src, srcset } = x;
+      const { src, srcset, alt } = x;
       if (!srcset || !srcset.length) {
-        return src;
+        return { src, alt };
       }
 
       const baseLinks = srcset.split(",").map(x => x.trim());
@@ -22,7 +22,7 @@ export const common = () => {
           biggerImageUrl = url;
         }
       });
-      return biggerImageUrl || src;
+      return { src: biggerImageUrl || src, alt };
     })
     .filter(x => !!x);
   return srcs || [];

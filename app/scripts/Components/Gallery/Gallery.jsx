@@ -32,8 +32,8 @@ function Gallery() {
     ReactDOM.render(<React.Fragment />, getContainer());
   };
 
-  const updateImages = async (urls = []) => {
-    if (!urls || urls.length === 0) {
+  const updateImages = async (imgs = []) => {
+    if (!imgs || imgs.length === 0) {
       setLoading(false);
       setInitImagesMeta([]);
       setImagesMeta([]);
@@ -41,7 +41,7 @@ function Gallery() {
 
     try {
       setLoading(true);
-      const imagesMeta = urls.map(url => ({ _id: uuid(), src: url }));
+      const imagesMeta = imgs.map(img => ({ _id: uuid(), ...img }));
 
       // Get images only with min width, height
       const updatedMeta = await getImagesWithMinDimensions({

@@ -37,7 +37,7 @@ class ContentScript {
 
       switch (message.task) {
         case MESSAGE_TYPES.COLLECT_IMAGES: {
-          return Promise.resolve({ srcs: this.getImageUrls() });
+          return Promise.resolve({ srcs: this.getImages() });
         }
         case MESSAGE_TYPES.SHOW_GALLERY: {
           this.showGallery();
@@ -88,7 +88,7 @@ class ContentScript {
    *
    * @memberof ContentScript
    */
-  getImageUrls = async () => {
+  getImages = async () => {
     try {
       const location = this.getLocationDetails();
       const urls = await getUrls(location);
@@ -110,10 +110,10 @@ class ContentScript {
     // This element will the root element for extension's content script UI.
     injectContainer();
 
-    const imageUrls = await this.getImageUrls();
+    const images = await this.getImages();
 
     // Attach container again if someone removed container again.
-    startGallery(imageUrls);
+    startGallery(images);
   };
 }
 

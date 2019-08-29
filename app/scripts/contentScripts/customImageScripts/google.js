@@ -6,6 +6,7 @@ export const google = () => {
       .map(link => {
         const {
           parentNode: { href },
+          alt,
         } = link;
         const urlIndex = href.indexOf("imgurl=");
         let _url = href.substring(urlIndex + 7, href.indexOf("&", urlIndex));
@@ -18,9 +19,9 @@ export const google = () => {
           url = _url;
         }
 
-        return url;
+        return { src: url, alt };
       })
-      .filter(x => !!x);
+      .filter(x => !!x.src);
     return images;
   } catch (error) {
     console.log("google error:", error);
