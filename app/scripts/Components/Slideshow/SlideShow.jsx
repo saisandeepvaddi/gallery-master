@@ -129,6 +129,7 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
             >
               Previous
             </Button>
+            <span style={{ paddingRight: 10 }}></span>
             <Button
               onClick={handleClickRight}
               disabled={indexRef.current === images.length - 1}
