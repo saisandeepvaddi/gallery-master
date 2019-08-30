@@ -10,10 +10,7 @@ function Image({ imgMeta }) {
 
   const isThisImageSelected = !!selectedImages.find(x => x._id === _id);
 
-  const handleClick = e => {
-    e.preventDefault();
-    console.log("pin: ", window.window);
-
+  const selectImage = () => {
     const isAlreadyInSelectedImages = isThisImageSelected;
     if (!isAlreadyInSelectedImages) {
       const thisImageAddedArray = [...selectedImages, { ...imgMeta }];
@@ -23,6 +20,16 @@ function Image({ imgMeta }) {
         x => x._id !== _id
       );
       setSelectedImages(thisImageRemovedArray);
+    }
+  };
+
+  const handleClick = e => {
+    e.preventDefault();
+    if (e.ctrlKey) {
+      selectImage();
+      return;
+    } else {
+      startZoom(imgMeta);
     }
   };
 
