@@ -1,11 +1,15 @@
 const containerId = "imgextension-container";
 const zoomContainerId = "imgextension-zoom-container";
+const slideshowContainerId = "imgextension-slideshow-container";
 
 export const isExtensionContainerAttached = () =>
   document.getElementById(containerId) !== null;
 
 export const isZoomContainerAttached = () =>
   document.getElementById(zoomContainerId) !== null;
+
+export const isSlideshowContainerAttached = () =>
+  document.getElementById(slideshowContainerId) !== null;
 
 export const injectContainer = () => {
   if (isExtensionContainerAttached()) {
@@ -29,6 +33,17 @@ export const injectZoomContainer = () => {
   document.body.appendChild(el);
 };
 
+export const injectSlideshowContainer = () => {
+  if (isSlideshowContainerAttached()) {
+    return;
+  }
+
+  const el = document.createElement("div");
+  el.id = slideshowContainerId;
+
+  document.body.appendChild(el);
+};
+
 export const getContainer = () => {
   if (!isExtensionContainerAttached()) {
     throw new Error("Extension container does not exist on page.");
@@ -47,4 +62,11 @@ export const getZoomContainer = () => {
     injectZoomContainer();
   }
   return document.getElementById(zoomContainerId);
+};
+
+export const getSlideshowContainer = () => {
+  if (!isSlideshowContainerAttached()) {
+    injectSlideshowContainer();
+  }
+  return document.getElementById(slideshowContainerId);
 };

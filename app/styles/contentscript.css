@@ -55,7 +55,8 @@
   flex-wrap: wrap;
 }
 
-.zoom-image-container {
+.zoom-image-container,
+.slideshow-container {
   position: fixed;
   top: 0;
   left: 0;
