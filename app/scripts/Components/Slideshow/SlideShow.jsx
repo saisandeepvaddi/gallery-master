@@ -1,5 +1,5 @@
 import React from "react";
-import panzoom from "panzoom";
+import panzoom from "../../../libs/panzoom";
 import { Button } from "evergreen-ui";
 
 function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
@@ -19,7 +19,8 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
     const zoomInstance = panzoom(imagesRef.current, {
       smoothScroll: false,
       zoomSpeed: 0.09,
-      zoomDoubleClickSpeed: 1, //disable double click zoom
+      zoomDoubleClickSpeed: 1, //disable double click zoom,
+      zoomOnUpDownArrow: true,
       filterKey: function(e) {
         if (e.which === 37 || e.which === 39) {
           return true;

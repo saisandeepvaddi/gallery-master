@@ -1,5 +1,5 @@
 import React from "react";
-import panzoom from "panzoom";
+import panzoom from "../../../libs/panzoom";
 
 function ZoomHome({ image, stopZoom }) {
   const { height, width, src } = image;
