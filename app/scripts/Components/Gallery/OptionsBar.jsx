@@ -106,13 +106,14 @@ function OptionsBar({
             {imagesMeta.length || 0} images found
           </span>
           <Button
+            className="truncate"
             disabled={imagesMeta.length === 0}
             onClick={e => {
               e.preventDefault();
               startSlideShow(imagesMeta);
             }}
           >
-            Start Slideshow
+            Slideshow
           </Button>
         </Pane>
         <Pane
