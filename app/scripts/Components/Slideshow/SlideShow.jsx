@@ -7,20 +7,44 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
   const [imageToShow, setImageToShow] = React.useState(
     images && images.length > 0 ? images[currentIndex] : null
   );
-  const imagesRef = React.createRef();
 
+  const angle = React.useRef(0);
+
+  const imagesRef = React.useRef();
   const indexRef = React.useRef(currentIndex);
 
-  React.useEffect(() => {
-    if (!imagesRef.current) {
-      console.log("No Ref");
+  const rotate = React.useCallback(e => {
+    const currentAngle = Number.isNaN(angle.current) ? 0 : angle.current;
+    let newAngle = currentAngle;
+    if (e.deltaY > 0) {
+      // Wheel Down
+      newAngle = (currentAngle + 90) % 360;
+    } else {
+      // wheel Up
+      newAngle = (currentAngle - 90) % 360;
     }
+    imagesRef.current.style.transformOrigin = "center";
+    imagesRef.current.style.transform = `rotate(${newAngle}deg)`;
+    angle.current = newAngle;
+  }, []);
+
+  const setupZoom = React.useCallback(() => {
+    console.log("Angle now; ", angle.current);
 
     const zoomInstance = panzoom(imagesRef.current, {
       smoothScroll: false,
       zoomSpeed: 0.09,
       zoomDoubleClickSpeed: 1, //disable double click zoom,
       zoomOnUpDownArrow: true,
+      beforeWheel: function(e) {
+        const shouldIgnore = e.altKey;
+
+        if (shouldIgnore) {
+          rotate(e);
+        }
+
+        return shouldIgnore;
+      },
       filterKey: function(e) {
         if (e.which === 37 || e.which === 39) {
           return true;
@@ -28,9 +52,24 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
       },
     });
 
+    zoomInstance.on("zoom", function(e) {
+      e.pause();
+      imagesRef.current.style.transformOrigin = "center";
+      imagesRef.current.style.transform = `rotate(${angle.current}deg)`;
+      e.resume();
+    });
+
     return () => {
       zoomInstance.dispose();
     };
+  }, [angle]);
+
+  React.useEffect(() => {
+    if (!imagesRef.current) {
+      console.log("No Ref");
+    }
+
+    setupZoom();
   }, []);
 
   const isValidIndex = index => {
@@ -41,6 +80,7 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
     if (isValidIndex(indexRef.current - 1)) {
       indexRef.current = indexRef.current - 1;
       setImageToShow(images[indexRef.current]);
+      angle.current = 0;
     }
   };
 
@@ -48,11 +88,11 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
     if (isValidIndex(indexRef.current + 1)) {
       indexRef.current = indexRef.current + 1;
       setImageToShow(images[indexRef.current]);
+      angle.current = 0;
     }
   };
 
   const handleKeyboard = key => {
-    console.log("key:", key);
     if (key === 37) {
       showPrevious();
     } else if (key === 39) {
@@ -102,6 +142,7 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
           }}
         >
           <img
+            id="someRandomId"
             ref={imagesRef}
             src={imageToShow.src}
             style={{
