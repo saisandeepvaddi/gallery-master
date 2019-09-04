@@ -123,33 +123,39 @@ function Gallery() {
         hasFooter={false}
         shouldCloseOnOverlayClick={false}
         onCloseComplete={() => hideContainer()}
+        preventBodyScrolling
+        contentContainerProps={{
+          style: { overflowY: "hidden" },
+        }}
       >
-        <OptionsBar {...optionsBarProps} />
-        {loading ? (
-          <Info>Collecting Images...</Info>
-        ) : (
-          <Pane height="90vh">
-            <>
-              {!imagesMeta || imagesMeta.length === 0 ? (
-                <Info>
-                  No Images found with selected dimensions. Try decreasing Min
-                  Width and Min Height.
-                </Info>
-              ) : (
-                <Grid cols={cols}>
-                  {imagesMeta.map(imgMeta => {
-                    const { _id } = imgMeta;
-                    return (
-                      <span key={_id} style={{ minHeight: 250 }}>
-                        <Image imgMeta={imgMeta} />
-                      </span>
-                    );
-                  })}
-                </Grid>
-              )}
-            </>
-          </Pane>
-        )}
+        <div>
+          <OptionsBar {...optionsBarProps} />
+          {loading ? (
+            <Info>Collecting Images...</Info>
+          ) : (
+            <Pane style={{ overflowY: "auto" }} height="90vh">
+              <>
+                {!imagesMeta || imagesMeta.length === 0 ? (
+                  <Info>
+                    No Images found with selected dimensions. Try decreasing Min
+                    Width and Min Height.
+                  </Info>
+                ) : (
+                  <Grid cols={cols}>
+                    {imagesMeta.map(imgMeta => {
+                      const { _id } = imgMeta;
+                      return (
+                        <span key={_id} style={{ minHeight: 250 }}>
+                          <Image imgMeta={imgMeta} />
+                        </span>
+                      );
+                    })}
+                  </Grid>
+                )}
+              </>
+            </Pane>
+          )}
+        </div>
       </Dialog>
     </>
   );
