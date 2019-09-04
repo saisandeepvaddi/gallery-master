@@ -1,28 +1,66 @@
 import React from "react";
 import panzoom from "../../../libs/panzoom";
 import { Button } from "evergreen-ui";
+import debounce from "lodash.debounce";
+
+const degrees = [0, 90, 180, 270];
 
 function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
   const containerRef = React.useRef();
   const [imageToShow, setImageToShow] = React.useState(
     images && images.length > 0 ? images[currentIndex] : null
   );
-  const imagesRef = React.createRef();
 
+  let currentAngleIndex = React.useRef(0);
+  const imageRef = React.useRef();
   const indexRef = React.useRef(currentIndex);
 
+  const rotate = React.useCallback(
+    debounce((direction = "original") => {
+      let nextIndex = 0;
+      if (direction === "right") {
+        const next = currentAngleIndex.current + 1;
+        nextIndex = next > 3 ? 0 : next;
+      } else if (direction === "left") {
+        const next = currentAngleIndex.current - 1;
+        nextIndex = next > -1 ? next : 3;
+      } else if (direction === "original") {
+        // original
+        nextIndex = 0;
+      }
+      currentAngleIndex.current = nextIndex;
+      let original = imageRef.current.style.transform;
+      let t = original.replace(/rotate\(.*\)/gi, "");
+      t = `${t} rotate(${degrees[nextIndex]}deg)`;
+      imageRef.current.style.transform = t;
+    }, 100),
+    []
+  );
+
   React.useEffect(() => {
-    if (!imagesRef.current) {
+    if (!imageRef.current) {
       console.log("No Ref");
     }
 
-    const zoomInstance = panzoom(imagesRef.current, {
+    const zoomInstance = panzoom(imageRef.current, {
       smoothScroll: false,
       zoomSpeed: 0.09,
       zoomDoubleClickSpeed: 1, //disable double click zoom,
       zoomOnUpDownArrow: true,
       filterKey: function(e) {
         if (e.which === 37 || e.which === 39) {
+          return true;
+        }
+      },
+      beforeWheel: function(e) {
+        if (e.altKey) {
+          e.stopPropagation();
+          if (e.deltaY > 0) {
+            //wheel down
+            rotate("right");
+          } else {
+            rotate("left");
+          }
           return true;
         }
       },
@@ -39,6 +77,7 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
 
   const showPrevious = () => {
     if (isValidIndex(indexRef.current - 1)) {
+      rotate("original");
       indexRef.current = indexRef.current - 1;
       setImageToShow(images[indexRef.current]);
     }
@@ -46,13 +85,13 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
 
   const showNext = () => {
     if (isValidIndex(indexRef.current + 1)) {
+      rotate("original");
       indexRef.current = indexRef.current + 1;
       setImageToShow(images[indexRef.current]);
     }
   };
 
   const handleKeyboard = key => {
-    console.log("key:", key);
     if (key === 37) {
       showPrevious();
     } else if (key === 39) {
@@ -102,7 +141,7 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
           }}
         >
           <img
-            ref={imagesRef}
+            ref={imageRef}
             src={imageToShow.src}
             style={{
               height: imageToShow.height,
