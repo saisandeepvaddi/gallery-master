@@ -22,16 +22,26 @@ function OptionsBar({
   const [isDownloading, setIsDownloading] = React.useState(false);
   const [disableDownload, setDisableDownload] = React.useState(false);
   const [isAllSelected, setIsAllSelected] = React.useState(false);
-  const { setOption, options } = useOptions();
+  const { options } = useOptions();
+
+  // React.useEffect(() => {
+  //   const { cols: optionsCols } = options;
+
+  //   if (optionsCols && optionsCols !== cols) {
+  //     setCols(optionsCols);
+  //   }
+
+  //   console.log("options: ", options);
+  // }, [options]);
 
   React.useEffect(() => {
-    const { cols: optionsCols } = options;
-
-    if (optionsCols && optionsCols !== cols) {
-      setCols(optionsCols);
+    if (!options) {
+      return;
     }
 
-    console.log("options: ", options);
+    setMinWidth(options.minWidth);
+    setMinHeight(options.minHeight);
+    setCols(options.cols);
   }, [options]);
 
   const disableDownloadButton = () => {
@@ -97,7 +107,6 @@ function OptionsBar({
             value={cols}
             onChange={e => {
               setCols(e.target.value || 4);
-              setOption("cols", e.target.value);
             }}
             style={{ maxWidth: 200 }}
           />
@@ -126,11 +135,11 @@ function OptionsBar({
             <span>Max Time: </span>
             <TextInput
               type="number"
-              placeholder="width"
+              placeholder="loading time"
               min="1"
-              step="30"
-              value={loadingTime}
-              onChange={e => setLoadingTime(e.target.value || 5)}
+              step="1"
+              value={loadingTime || 1}
+              onChange={e => setLoadingTime(Number(e.target.value) || 1)}
               width={100}
             />
             <span style={{ padding: 10 }}></span>
@@ -141,7 +150,7 @@ function OptionsBar({
               min="1"
               step="10"
               value={minWidth}
-              onChange={e => setMinWidth(e.target.value || 5)}
+              onChange={e => setMinWidth(Number(e.target.value) || 5)}
               width={80}
             />
             <span style={{ padding: 10 }}></span>
@@ -152,7 +161,7 @@ function OptionsBar({
               min="1"
               step="10"
               value={minHeight}
-              onChange={e => setMinHeight(e.target.value || 5)}
+              onChange={e => setMinHeight(Number(e.target.value) || 5)}
               width={80}
             />
             <span style={{ padding: 10 }}></span>

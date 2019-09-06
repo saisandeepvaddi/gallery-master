@@ -18,13 +18,9 @@ function Gallery() {
   const [initImagesMeta, setInitImagesMeta] = React.useState([]);
   const [imagesMeta, setImagesMeta] = React.useState([]);
   const [cols, setCols] = React.useState(5);
-  const [loadingTime, setLoadingTime] = React.useState(1);
+  const [loadingTime, setLoadingTime] = React.useState(null);
   const [minWidth, setMinWidth] = React.useState(300);
-  // const [maxWidth, setMaxWidth] = React.useState(1000);
   const [minHeight, setMinHeight] = React.useState(300);
-  // const [maxHeight, setMaxHeight] = React.useState(1000)
-
-  React.useEffect(() => {}, []);
 
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
@@ -35,6 +31,9 @@ function Gallery() {
   };
 
   const updateImages = async (imgs = []) => {
+    if (!loadingTime) {
+      return;
+    }
     if (!imgs || imgs.length === 0) {
       setLoading(false);
       setInitImagesMeta([]);
@@ -95,12 +94,23 @@ function Gallery() {
   };
 
   React.useEffect(() => {
+    if (!options) {
+      return;
+    }
+
+    setMinWidth(options.minWidth);
+    setMinHeight(options.minHeight);
+    setCols(options.cols);
+    setLoadingTime(options.loadingTime);
+  }, [options]);
+
+  React.useEffect(() => {
     setShowGalleryDialog(true);
   }, []);
 
   React.useEffect(() => {
     updateImages(images || []);
-  }, [images]);
+  }, [images, loadingTime]);
 
   const optionsBarProps = {
     loading,

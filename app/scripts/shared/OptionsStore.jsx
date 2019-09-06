@@ -3,8 +3,11 @@ import { getDataFromStorage, setDataToStorage } from "./store";
 
 const OptionsContext = React.createContext({});
 
-const defaultOptions = {
+export const defaultOptions = {
+  minWidth: 300,
+  minHeight: 300,
   cols: 4,
+  loadingTime: 1,
 };
 
 function OptionsProvider(props) {
@@ -31,6 +34,7 @@ function OptionsProvider(props) {
       }
 
       const updatedOptions = { ...options, [key]: value };
+      console.log("updatedOptions:", updatedOptions);
 
       setDataToStorage({ options: updatedOptions });
       setOptions(updatedOptions);
