@@ -10,9 +10,11 @@ import uuid from "uuid/v4";
 import "lazysizes";
 import Info from "./Info";
 import { useImages } from "../../shared/ImageStore";
+import { useOptions } from "../../shared/OptionsStore";
 
 function Gallery() {
   const { images } = useImages();
+  const { options } = useOptions();
   const [initImagesMeta, setInitImagesMeta] = React.useState([]);
   const [imagesMeta, setImagesMeta] = React.useState([]);
   const [cols, setCols] = React.useState(5);
@@ -114,6 +116,10 @@ function Gallery() {
     imagesMeta,
   };
 
+  if (options === null) {
+    return <div>Loading Settings</div>;
+  }
+
   return (
     <>
       <Dialog
@@ -124,16 +130,13 @@ function Gallery() {
         shouldCloseOnOverlayClick={false}
         onCloseComplete={() => hideContainer()}
         preventBodyScrolling
-        contentContainerProps={{
-          style: { overflowY: "hidden" },
-        }}
       >
         <div>
           <OptionsBar {...optionsBarProps} />
           {loading ? (
             <Info>Collecting Images...</Info>
           ) : (
-            <Pane style={{ overflowY: "auto" }} height="90vh">
+            <Pane height="90vh">
               <>
                 {!imagesMeta || imagesMeta.length === 0 ? (
                   <Info>

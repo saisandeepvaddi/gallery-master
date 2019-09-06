@@ -8,7 +8,7 @@ const defaultOptions = {
 };
 
 function OptionsProvider(props) {
-  const [options, setOptions] = React.useState({});
+  const [options, setOptions] = React.useState(null);
 
   React.useEffect(() => {
     const getOptions = async () => {

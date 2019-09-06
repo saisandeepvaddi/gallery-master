@@ -1,13 +1,6 @@
 import React from "react";
-import { useOptions } from "../shared/OptionsStore";
 
 function OptionsPage() {
-  const [minWidth, setMinWidth] = React.useState(100);
-  const [minHeight, setMinHeight] = React.useState(100);
-  const { options, setOption } = useOptions();
-
-  React.useEffect(() => {}, []);
-
   return (
     <>
       <p>Options</p>
