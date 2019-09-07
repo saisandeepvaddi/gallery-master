@@ -25,6 +25,7 @@ function Image({ imgMeta }) {
 
   const handleClick = e => {
     e.preventDefault();
+    return;
     if (e.ctrlKey) {
       selectImage();
       return;

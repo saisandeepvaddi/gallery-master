@@ -12,6 +12,9 @@ import Info from "./Info";
 import { useImages } from "../../shared/ImageStore";
 import { useOptions } from "../../shared/OptionsStore";
 
+import Carousel, { Modal, ModalGateway } from "react-images";
+import CarouselImage from "./CarouselImage";
+
 function Gallery() {
   const { images } = useImages();
   const { options } = useOptions();
@@ -24,6 +27,9 @@ function Gallery() {
 
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
+
+  const [lightBoxOpen, setLightBoxOpen] = React.useState(false);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const hideContainer = () => {
     setShowGalleryDialog(false);
@@ -126,6 +132,11 @@ function Gallery() {
     imagesMeta,
   };
 
+  const toggleLightbox = i => {
+    setSelectedIndex(i);
+    setLightBoxOpen(!lightBoxOpen);
+  };
+
   if (options === null) {
     return <div>Loading Settings</div>;
   }
@@ -142,6 +153,7 @@ function Gallery() {
         preventBodyScrolling
       >
         <div>
+          {/* <button onClick={() => toggleLightbox()}>Click</button> */}
           <OptionsBar {...optionsBarProps} />
           {loading ? (
             <Info>Collecting Images...</Info>
@@ -155,10 +167,14 @@ function Gallery() {
                   </Info>
                 ) : (
                   <Grid cols={cols}>
-                    {imagesMeta.map(imgMeta => {
+                    {imagesMeta.map((imgMeta, i) => {
                       const { _id } = imgMeta;
                       return (
-                        <span key={_id} style={{ minHeight: 250 }}>
+                        <span
+                          key={_id}
+                          style={{ minHeight: 250 }}
+                          onClick={() => toggleLightbox(i)}
+                        >
                           <Image imgMeta={imgMeta} />
                         </span>
                       );
@@ -170,6 +186,17 @@ function Gallery() {
           )}
         </div>
       </Dialog>
+      <ModalGateway>
+        {lightBoxOpen ? (
+          <Modal onClose={toggleLightbox} style={{ zIndex: 999999 }}>
+            <Carousel
+              views={imagesMeta.map(x => ({ src: x.src }))}
+              currentIndex={selectedIndex}
+              components={{ View: CarouselImage }}
+            />
+          </Modal>
+        ) : null}
+      </ModalGateway>
     </>
   );
 }
