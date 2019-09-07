@@ -3,10 +3,10 @@ import { useImages } from "../../shared/ImageStore";
 import { startZoom } from "../Zoom";
 import { Button } from "evergreen-ui";
 
-function Image({ imgMeta }) {
+function Image({ imgMeta, ctrlPressed }) {
   const { selectedImages, setSelectedImages } = useImages();
   const { _id, src, alt } = imgMeta;
-  const [showPinterest, setShowPinterest] = React.useState(false);
+  const [mouseEntered, setMouseEntered] = React.useState(false);
 
   const isThisImageSelected = !!selectedImages.find(x => x._id === _id);
 
@@ -41,11 +41,11 @@ function Image({ imgMeta }) {
   };
 
   const handleMouseEnter = () => {
-    setShowPinterest(true);
+    setMouseEntered(true);
   };
 
   const handleMouseLeave = () => {
-    setShowPinterest(false);
+    setMouseEntered(false);
   };
 
   const handlePinSave = e => {
@@ -67,8 +67,11 @@ function Image({ imgMeta }) {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {showPinterest ? (
-          <div className="p-absolute" style={{ top: 10, right: 10 }}>
+        {mouseEntered ? (
+          <div
+            className="p-absolute"
+            style={{ top: 10, right: 10, opacity: 1, zIndex: 99 }}
+          >
             <Button
               onClick={handlePinSave}
               style={{ background: "#E60023", color: "white" }}
@@ -84,13 +87,14 @@ function Image({ imgMeta }) {
           alt={alt || "Image Here"}
           src={"http://placehold.it/500"}
           data-src={src}
-          className="lazyload"
+          className="lazyload gallery-image"
           style={{
             border: isThisImageSelected ? "3px solid #407cca" : "none",
             objectFit: "cover",
             width: "100%",
             height: "100%",
-            opacity: 1,
+            opacity: mouseEntered ? 0.7 : 1,
+            cursor: ctrlPressed ? "grab" : "zoom-in",
           }}
         />
       </div>

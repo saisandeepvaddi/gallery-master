@@ -21,14 +21,27 @@ function Gallery() {
   const [loadingTime, setLoadingTime] = React.useState(null);
   const [minWidth, setMinWidth] = React.useState(300);
   const [minHeight, setMinHeight] = React.useState(300);
-
   const [loading, setLoading] = React.useState(false);
   const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
+  const [ctrlPressed, setCtrlPressed] = React.useState(false);
 
   const hideContainer = () => {
     setShowGalleryDialog(false);
     ReactDOM.render(<React.Fragment />, getContainer());
   };
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", e => {
+      if (e.key.toLowerCase() === "control") {
+        setCtrlPressed(true);
+      }
+    });
+    document.addEventListener("keyup", e => {
+      if (e.key.toLowerCase() === "control") {
+        setCtrlPressed(false);
+      }
+    });
+  }, []);
 
   const updateImages = async (imgs = []) => {
     if (!loadingTime) {
@@ -84,7 +97,6 @@ function Gallery() {
         minWidth,
       });
       setLoading(false);
-      console.log("updatedMeta after change:", updatedMeta);
       setImagesMeta(updatedMeta);
     } catch (error) {
       console.error(error);
@@ -159,7 +171,7 @@ function Gallery() {
                       const { _id } = imgMeta;
                       return (
                         <span key={_id} style={{ minHeight: 250 }}>
-                          <Image imgMeta={imgMeta} />
+                          <Image imgMeta={imgMeta} ctrlPressed={ctrlPressed} />
                         </span>
                       );
                     })}

@@ -81,6 +81,14 @@
   width: 100%;
 }
 
+.cursor-zoom {
+  cursor: zoom-in;
+}
+
+.cursor-grab {
+  cursor: grab;
+}
+
 /* Custom */
 
 button.truncate {
