@@ -3,7 +3,7 @@ import { Pane, TextInput, Button } from "evergreen-ui";
 import { useImages } from "../../shared/ImageStore";
 import { downloadImages } from "../../shared/utilities";
 import { useOptions } from "../../shared/OptionsStore";
-import { startSlideShow } from "../Slideshow";
+// import { startSlideShow } from "../Slideshow";
 
 function OptionsBar({
   minWidth,
@@ -114,7 +114,7 @@ function OptionsBar({
           <span style={{ width: 100 }}>
             {imagesMeta.length || 0} images found
           </span>
-          <Button
+          {/* <Button
             className="truncate"
             disabled={imagesMeta.length === 0}
             onClick={e => {
@@ -123,7 +123,7 @@ function OptionsBar({
             }}
           >
             Slideshow
-          </Button>
+          </Button> */}
         </Pane>
         <Pane
           width="100%"

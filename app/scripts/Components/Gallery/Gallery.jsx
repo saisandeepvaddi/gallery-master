@@ -167,11 +167,16 @@ function Gallery() {
                   </Info>
                 ) : (
                   <Grid cols={cols}>
-                    {imagesMeta.map(imgMeta => {
+                    {imagesMeta.map((imgMeta, index) => {
                       const { _id } = imgMeta;
                       return (
                         <span key={_id} style={{ minHeight: 250 }}>
-                          <Image imgMeta={imgMeta} ctrlPressed={ctrlPressed} />
+                          <Image
+                            imgMeta={imgMeta}
+                            ctrlPressed={ctrlPressed}
+                            allImagesMeta={imagesMeta}
+                            currentIndex={index}
+                          />
                         </span>
                       );
                     })}

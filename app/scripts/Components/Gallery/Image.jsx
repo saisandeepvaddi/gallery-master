@@ -1,9 +1,9 @@
 import React from "react";
 import { useImages } from "../../shared/ImageStore";
-import { startZoom } from "../Zoom";
 import { Button } from "evergreen-ui";
+import { startSlideShow } from "../Slideshow";
 
-function Image({ imgMeta, ctrlPressed }) {
+function Image({ imgMeta, ctrlPressed, allImagesMeta, currentIndex }) {
   const { selectedImages, setSelectedImages } = useImages();
   const { _id, src, alt } = imgMeta;
   const [mouseEntered, setMouseEntered] = React.useState(false);
@@ -29,15 +29,13 @@ function Image({ imgMeta, ctrlPressed }) {
       selectImage();
       return;
     } else {
-      startZoom(imgMeta);
+      startSlideShow(allImagesMeta, currentIndex);
     }
   };
 
   const handleDoubleClick = e => {
     e.preventDefault();
     e.stopPropagation();
-
-    startZoom(imgMeta);
   };
 
   const handleMouseEnter = () => {
