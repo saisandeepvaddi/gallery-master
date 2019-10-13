@@ -2,6 +2,10 @@
 
 Collect Images from webpages you visit
 
+## NOTE
+
+This is still work in progress. You can build development version now.
+
 ## Install
 
     $ yarn install
