@@ -1,6 +1,6 @@
 import React from "react";
 import panzoom from "../../../libs/panzoom";
-import { Button } from "evergreen-ui";
+import { Button, IconButton } from "evergreen-ui";
 import debounce from "lodash.debounce";
 
 const degrees = [0, 90, 180, 270];
@@ -122,16 +122,17 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
   return (
     <>
       <div ref={containerRef}>
-        <Button
+        <IconButton
           className="top-right"
-          iconBefore="cross"
+          icon="cross"
+          appearance="minimal"
           onClick={e => {
             e.stopPropagation();
             stopSlideShow();
           }}
-        >
-          Close
-        </Button>
+          height={60}
+        />
+
         <div
           className="slideshow-container d-flex justify-center align-center flex-column"
           // onClick={() => stopSlideShow()}
