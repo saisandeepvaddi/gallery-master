@@ -39,7 +39,7 @@ Automatically picking highest-quality images works in the following cases.
 3. Doesn't support data URIs yet.
 4. Websites use different methods or js libraries to lazyload images where each library might be using different methods to lazyload. It might not be possible to get highest quality image in all such cases since it requires different logic to extract the highest quality. In future versions, there may be increased support for such cases.
 5. Can only download images if the link is working. (Browser might block hitting suspicious links even if the image appears in the page).
-6. Can only download if the image visible actually ends with image file extension. Images can be just links to other websites with image set from CSS background property.
+6. Can only download if the image visible actually ends with image file extension. _Currently_, does not get the image set from css backgrounds.
 7. All downloads are .jpg files.
 
 # For Developers
