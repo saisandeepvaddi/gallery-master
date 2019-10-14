@@ -30,5 +30,6 @@
       "all_frames": false
     }
   ],
-  "permissions": ["activeTab", "downloads", "storage", "tabs", "<all_urls>"]
+  "permissions": ["activeTab", "downloads", "storage", "tabs", "<all_urls>"],
+  "web_accessible_resources": ["images/*"]
 }

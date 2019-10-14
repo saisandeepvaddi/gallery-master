@@ -2,6 +2,9 @@ import React from "react";
 import { useImages } from "../../shared/ImageStore";
 import { Button } from "evergreen-ui";
 import { startSlideShow } from "../Slideshow";
+import { getPlaceholderImage } from "../../contentScripts/images";
+
+const placeholderImage = getPlaceholderImage();
 
 function Image({ imgMeta, ctrlPressed, allImagesMeta, currentIndex }) {
   const { selectedImages, setSelectedImages } = useImages();
@@ -83,7 +86,7 @@ function Image({ imgMeta, ctrlPressed, allImagesMeta, currentIndex }) {
           onDoubleClick={handleDoubleClick}
           id={_id}
           alt={alt || "Image Here"}
-          src={"http://placehold.it/500"}
+          src={placeholderImage}
           data-src={src}
           className="lazyload gallery-image"
           style={{

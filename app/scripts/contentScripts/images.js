@@ -20,3 +20,8 @@ export const getUrls = (location = null) => {
 
   return common();
 };
+
+export const getPlaceholderImage = () => {
+  const imgURL = browser.runtime.getURL("images/placeholder.png");
+  return imgURL;
+};
