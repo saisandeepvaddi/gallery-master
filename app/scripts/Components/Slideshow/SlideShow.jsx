@@ -1,6 +1,6 @@
 import React from "react";
 import panzoom from "../../../libs/panzoom";
-import { Button, IconButton } from "evergreen-ui";
+import { IconButton } from "evergreen-ui";
 import debounce from "lodash.debounce";
 
 const degrees = [0, 90, 180, 270];
@@ -158,29 +158,52 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
             className="d-flex align-center justify-center w-100"
             style={{ zIndex: 99999, marginTop: "auto", marginBottom: 10 }}
           >
-            <Button
+            <IconButton
               onClick={handleClickLeft}
               disabled={indexRef.current === 0}
-              iconBefore="arrow-left"
+              icon="arrow-left"
+              appearance="minimal"
+              title="Show previous image"
               onDoubleClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-            >
-              Previous
-            </Button>
-            <span style={{ paddingRight: 10 }}></span>
-            <Button
+              height={60}
+            />
+
+            <IconButton
+              icon="image-rotate-left"
+              appearance="minimal"
+              onClick={e => {
+                e.stopPropagation();
+                rotate("left");
+              }}
+              title="Rotate image left"
+              height={60}
+            />
+            <span style={{ paddingRight: 30 }}></span>
+            <IconButton
+              icon="image-rotate-right"
+              appearance="minimal"
+              onClick={e => {
+                e.stopPropagation();
+                rotate("right");
+              }}
+              title="Rotate image right"
+              height={60}
+            />
+            <IconButton
               onClick={handleClickRight}
               disabled={indexRef.current === images.length - 1}
-              iconAfter="arrow-right"
+              icon="arrow-right"
+              appearance="minimal"
+              title="Show next image"
               onDoubleClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-            >
-              Next
-            </Button>
+              height={60}
+            />
           </div>
         </div>
       </div>
