@@ -1,3 +1,14 @@
+.w-100 {
+  width: 100%;
+}
+
+.ml-2 {
+  margin-left: 20px;
+}
+.mb-2 {
+  margin-bottom: 20px;
+}
+
 .d-flex {
   display: flex;
 }
@@ -30,6 +41,18 @@
   align-items: center;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
 .multi-row-flex {
   display: flex;
   flex-wrap: wrap;
@@ -47,4 +70,19 @@
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.two-col-row {
+  display: flex;
+  align-items: center;
+}
+
+.two-col-row:first-child {
+  text-align: right;
+  flex: 1;
+}
+
+.two-col-row:nth-child(2) {
+  text-align: left;
+  flex: 1;
 }
