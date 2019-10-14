@@ -1,7 +1,7 @@
 {
   "name": "gallery-master",
   "version": "0.0.1",
-  "description": "Collect Images from webpages you visit",
+  "description": "Create image slideshows from any webpage.",
   "scripts": {
     "dev:chrome": "webextension-toolbox dev chrome",
     "build:chrome": "webextension-toolbox build chrome",

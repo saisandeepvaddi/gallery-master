@@ -1,18 +1,18 @@
 {
   "appName": {
     "message": "Gallery Master",
-    "description": "The name of the application"
+    "description": "Create galleries and slideshows from images of any website. Supports downloading images, adding to Pinterest."
   },
   "appShortName": {
     "message": "Gallery Master",
-    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+    "description": "Create galleries and slideshows from images of any website. Supports downloading images, adding to Pinterest."
   },
   "appDescription": {
-    "message": "Collect Images from webpages you visit",
-    "description": "Collects images from the webpages you visit and creates a gallery out of them. Supports downloading images, adding to Pinterest."
+    "message": "Create galleries and slideshows from images of any website. Supports downloading images, adding to Pinterest.",
+    "description": "Create galleries and slideshows from images of any website. Supports downloading images, adding to Pinterest."
   },
   "browserActionTitle": {
     "message": "Gallery Master",
-    "description": "The title of the browser action button"
+    "description": "Click to create image gallery."
   }
 }
