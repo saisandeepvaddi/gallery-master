@@ -178,6 +178,10 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
                 e.stopPropagation();
                 rotate("left");
               }}
+              onDoubleClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               title="Rotate image left"
               height={60}
             />
@@ -188,6 +192,10 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
               onClick={e => {
                 e.stopPropagation();
                 rotate("right");
+              }}
+              onDoubleClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
               title="Rotate image right"
               height={60}
