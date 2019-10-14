@@ -76,6 +76,7 @@ function Image({ imgMeta, ctrlPressed, allImagesMeta, currentIndex }) {
             <Button
               onClick={handlePinSave}
               style={{ background: "#E60023", color: "white" }}
+              title="Add image to your Pinterest account"
             >
               Pinterest
             </Button>

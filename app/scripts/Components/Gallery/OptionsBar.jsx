@@ -186,16 +186,18 @@ function OptionsBar({
             {isAllSelected ? "Unselect All" : "Select All"}
           </Button>
           <span style={{ padding: 10 }}></span>
-          <Button
-            className="truncate"
-            appearance={disableDownload ? "default" : "primary"}
-            iconBefore="download"
-            onClick={downloadSelectedImages}
-            disabled={disableDownload}
-            id="ext-download-button"
-          >
-            {disableDownload ? "Select images to download" : "Download"}
-          </Button>
+          <span title="Ctrl + click to select image">
+            <Button
+              className="truncate"
+              appearance={disableDownload ? "default" : "primary"}
+              iconBefore="download"
+              onClick={downloadSelectedImages}
+              disabled={disableDownload}
+              id="ext-download-button"
+            >
+              {disableDownload ? "Select images to download" : "Download"}
+            </Button>
+          </span>
         </Pane>
       </Pane>
     </>
