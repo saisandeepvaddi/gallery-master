@@ -2,6 +2,7 @@
   "name": "gallery-master",
   "version": "0.0.1",
   "description": "Create image slideshows from any webpage.",
+  "license": "GPLv3",
   "scripts": {
     "dev:chrome": "webextension-toolbox dev chrome",
     "build:chrome": "webextension-toolbox build chrome",
