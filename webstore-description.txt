@@ -1,0 +1,40 @@
+Gallery Master is an open-source (GPLv3) extension which collects the images displayed on the visited page and organizes them into a gallery.
+You can also click on images in gallery to start slideshows.
+
+-- Features --
+
+1. View images in a grid with selected number of columns.
+2. View images with minimum height and width dimensions.
+3. Download all collected or selected (Ctrl + click) images to your local machine.
+4. Automatically picks the highest quality images even if page displays only low quality thumbnails (see limitations below).
+5. Zoom, Rotate the image in slideshows.
+
+-- Usage --
+
+1. Download the extension.
+2. On any page with images, click on the extension icon.
+
+-- Limitations & Known issues --
+
+These limitations & issues might be resolved in later versions based on the possibility. You can contribute code on Github if you are a developer.
+
+Automatically picking highest-quality images works in the following cases.
+
+1. If the webpages are using responsive HTML attributes (srcset) (https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images).
+2. If you are using the following image search services.
+     - Google Images
+     - Bing Images
+
+3. Doesn't support data URIs yet.
+4. Websites use different methods or js libraries to lazyload images where each library might be using different HTML attributes to lazy load. It might not be possible to get highest quality image in all such cases since it requires different logic to extract the highest quality. In future versions, there may be increased support for such cases.
+5. Can only download images if the link is working. (Browser might block hitting suspicious links even if the image appears in the page).
+6. Can only download if the image visible actually ends with image file extension. Images can be just links to other websites with image set from CSS background property.
+7. All downloads are .jpg files.
+
+
+-- If you are a developer or you want contribute any other way --
+
+Find the project repository for this extension at https://github.com/saisandeepvaddi/gallery-master
+
+
+
