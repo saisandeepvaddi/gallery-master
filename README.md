@@ -22,7 +22,7 @@ You can also click on images in gallery to start slideshows. Check the feature l
 
 ## Usage
 
-1. Download the extension from webstore (currently pending review) or download package file from [here](https://github.com/saisandeepvaddi/gallery-master/releases) and drag & drop in your chrome at chrome://extensions.
+1. Download the extension from webstore [link](https://chrome.google.com/webstore/detail/gallery-master/hehgcdlieefnbpndpkcemmdcpbdlbdhc) or download package file from [here](https://github.com/saisandeepvaddi/gallery-master/releases) and drag & drop in your chrome at chrome://extensions.
 2. On any page with images, click on the extension icon.
 
 ## Limitations & Known issues
