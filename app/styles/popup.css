@@ -1,45 +1,45 @@
-.d-flex {
+.gallery-master .d-flex {
   display: flex;
 }
 
-.flex-column {
+.gallery-master .flex-column {
   flex-direction: column;
 }
 
-.justify-start {
+.gallery-master .justify-start {
   justify-content: flex-start;
 }
 
-.justify-center {
+.gallery-master .justify-center {
   justify-content: center;
 }
 
-.justify-between {
+.gallery-master .justify-between {
   justify-content: space-between;
 }
 
-.justify-around {
+.gallery-master .justify-around {
   justify-content: space-around;
 }
 
-.justify-end {
+.gallery-master .justify-end {
   justify-content: flex-end;
 }
 
-.align-center {
+.gallery-master .align-center {
   align-items: center;
 }
 
-.multi-row-flex {
+.gallery-master .multi-row-flex {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.flex-1 {
+.gallery-master .flex-1 {
   flex: 1;
 }
 
-.flex-wrap {
+.gallery-master .flex-wrap {
   flex-wrap: wrap;
 }
