@@ -95,6 +95,8 @@ function Image({ imgMeta, ctrlPressed, allImagesMeta, currentIndex }) {
             objectFit: "cover",
             width: "100%",
             height: "100%",
+            minHeight: 250,
+            minWidth: 100,
             opacity: mouseEntered ? 0.7 : 1,
             cursor: ctrlPressed ? "grab" : "zoom-in",
           }}
