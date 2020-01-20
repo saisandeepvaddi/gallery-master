@@ -1,6 +1,6 @@
-const containerId = "imgextension-container";
-const zoomContainerId = "imgextension-zoom-container";
-const slideshowContainerId = "imgextension-slideshow-container";
+const containerId = "gallery-master-container";
+const zoomContainerId = "gallery-master-zoom-container";
+const slideshowContainerId = "gallery-master-slideshow-container";
 
 export const isExtensionContainerAttached = () =>
   document.getElementById(containerId) !== null;
@@ -18,6 +18,7 @@ export const injectContainer = () => {
 
   const el = document.createElement("div");
   el.id = containerId;
+  el.className = "gallery-master";
 
   document.body.appendChild(el);
 };
@@ -29,6 +30,7 @@ export const injectZoomContainer = () => {
 
   const el = document.createElement("div");
   el.id = zoomContainerId;
+  el.className = "gallery-master";
 
   document.body.appendChild(el);
 };
@@ -40,6 +42,7 @@ export const injectSlideshowContainer = () => {
 
   const el = document.createElement("div");
   el.id = slideshowContainerId;
+  el.className = "gallery-master";
 
   document.body.appendChild(el);
 };

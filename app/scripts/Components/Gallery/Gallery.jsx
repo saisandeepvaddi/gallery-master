@@ -153,7 +153,7 @@ function Gallery() {
         onCloseComplete={() => hideContainer()}
         preventBodyScrolling
       >
-        <div>
+        <div className="gallery-master">
           <OptionsBar {...optionsBarProps} />
           {loading ? (
             <Info>Collecting Images...</Info>
