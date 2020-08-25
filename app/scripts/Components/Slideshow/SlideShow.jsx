@@ -1,6 +1,6 @@
 import React from "react";
 import panzoom from "../../../libs/panzoom";
-import { IconButton } from "evergreen-ui";
+import { IconButton, Button } from "@chakra-ui/core";
 import debounce from "lodash.debounce";
 
 const degrees = [0, 90, 180, 270];
@@ -122,16 +122,17 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
   return (
     <>
       <div ref={containerRef}>
-        <IconButton
-          className="top-right"
-          icon="cross"
-          appearance="minimal"
+        <Button
+          id="close-slideshow-btn"
+          icon="close"
+          variant="solid"
           onClick={e => {
             e.stopPropagation();
             stopSlideShow();
           }}
-          height={60}
-        />
+        >
+          Close
+        </Button>
 
         <div
           className="slideshow-container d-flex justify-center align-center flex-column"
@@ -162,18 +163,17 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
               onClick={handleClickLeft}
               disabled={indexRef.current === 0}
               icon="arrow-left"
-              appearance="minimal"
-              title="Show previous image"
+              variant="ghost"
+              aria-label="Show previous image"
               onDoubleClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-              height={60}
             />
 
             <IconButton
-              icon="image-rotate-left"
-              appearance="minimal"
+              icon="chevron-left"
+              variant="ghost"
               onClick={e => {
                 e.stopPropagation();
                 rotate("left");
@@ -182,13 +182,12 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-              title="Rotate image left"
-              height={60}
+              aria-label="Rotate image left"
             />
             <span style={{ paddingRight: 30 }}></span>
             <IconButton
-              icon="image-rotate-right"
-              appearance="minimal"
+              icon="chevron-right"
+              variant="ghost"
               onClick={e => {
                 e.stopPropagation();
                 rotate("right");
@@ -197,20 +196,18 @@ function SlideShow({ images, stopSlideShow, currentIndex = 0 }) {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-              title="Rotate image right"
-              height={60}
+              aria-label="Rotate image right"
             />
             <IconButton
               onClick={handleClickRight}
               disabled={indexRef.current === images.length - 1}
               icon="arrow-right"
-              appearance="minimal"
-              title="Show next image"
+              variant="ghost"
+              aria-label="Show next image"
               onDoubleClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-              height={60}
             />
           </div>
         </div>

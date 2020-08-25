@@ -1,7 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { getImagesWithMinDimensions } from "../../shared/utilities";
-import { Dialog, Pane } from "evergreen-ui";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  Box,
+  ModalCloseButton,
+  useDisclosure,
+} from "@chakra-ui/core";
 import { getContainer } from "../../contentScripts/page";
 import Image from "./Image";
 import Grid from "./Grid";
@@ -22,11 +32,13 @@ function Gallery() {
   const [minWidth, setMinWidth] = React.useState(300);
   const [minHeight, setMinHeight] = React.useState(300);
   const [loading, setLoading] = React.useState(false);
-  const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
+  // const [showGalleryDialog, setShowGalleryDialog] = React.useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [ctrlPressed, setCtrlPressed] = React.useState(false);
 
   const hideContainer = () => {
-    setShowGalleryDialog(false);
+    // setShowGalleryDialog(false);
+    onClose && onClose();
     ReactDOM.render(<React.Fragment />, getContainer());
   };
 
@@ -117,7 +129,8 @@ function Gallery() {
   }, [options]);
 
   React.useEffect(() => {
-    setShowGalleryDialog(true);
+    // setShowGalleryDialog(true);
+    onOpen();
   }, []);
 
   React.useEffect(() => {
@@ -143,51 +156,48 @@ function Gallery() {
   }
 
   return (
-    <>
-      <Dialog
-        isShown={showGalleryDialog}
-        title="Gallery"
-        width="90vw"
-        hasFooter={false}
-        shouldCloseOnOverlayClick={false}
-        onCloseComplete={() => hideContainer()}
-        preventBodyScrolling
-      >
-        <div className="gallery-master">
-          <OptionsBar {...optionsBarProps} />
-          {loading ? (
-            <Info>Collecting Images...</Info>
-          ) : (
-            <Pane height="90vh">
-              <>
-                {!imagesMeta || imagesMeta.length === 0 ? (
-                  <Info>
-                    No Images found with selected dimensions. Try decreasing Min
-                    Width and Min Height.
-                  </Info>
-                ) : (
-                  <Grid cols={cols}>
-                    {imagesMeta.map((imgMeta, index) => {
-                      const { _id } = imgMeta;
-                      return (
-                        <span key={_id} style={{ minHeight: 250 }}>
-                          <Image
-                            imgMeta={imgMeta}
-                            ctrlPressed={ctrlPressed}
-                            allImagesMeta={imagesMeta}
-                            currentIndex={index}
-                          />
-                        </span>
-                      );
-                    })}
-                  </Grid>
-                )}
-              </>
-            </Pane>
-          )}
-        </div>
-      </Dialog>
-    </>
+    <Modal isOpen={isOpen} scrollBehavior="inside" size="80%">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Gallery</ModalHeader>
+        <ModalCloseButton onClick={hideContainer} />
+        <ModalBody>
+          <div className="gallery-master">
+            <OptionsBar {...optionsBarProps} />
+            {loading ? (
+              <Info>Collecting Images...</Info>
+            ) : (
+              <Box>
+                <>
+                  {!imagesMeta || imagesMeta.length === 0 ? (
+                    <Info>
+                      No Images found with selected dimensions. Try decreasing
+                      Min Width and Min Height.
+                    </Info>
+                  ) : (
+                    <Grid cols={cols}>
+                      {imagesMeta.map((imgMeta, index) => {
+                        const { _id } = imgMeta;
+                        return (
+                          <span key={_id} style={{ minHeight: 250 }}>
+                            <Image
+                              imgMeta={imgMeta}
+                              ctrlPressed={ctrlPressed}
+                              allImagesMeta={imagesMeta}
+                              currentIndex={index}
+                            />
+                          </span>
+                        );
+                      })}
+                    </Grid>
+                  )}
+                </>
+              </Box>
+            )}
+          </div>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 }
 

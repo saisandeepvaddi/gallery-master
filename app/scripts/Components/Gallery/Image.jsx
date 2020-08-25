@@ -1,6 +1,6 @@
 import React from "react";
 import { useImages } from "../../shared/ImageStore";
-import { Button } from "evergreen-ui";
+import { Button } from "@chakra-ui/core";
 import { startSlideShow } from "../Slideshow";
 import { getPlaceholderImage } from "../../contentScripts/images";
 
@@ -75,7 +75,8 @@ function Image({ imgMeta, ctrlPressed, allImagesMeta, currentIndex }) {
           >
             <Button
               onClick={handlePinSave}
-              style={{ background: "#E60023", color: "white" }}
+              // variantColor="#E60023"
+              style={{ background: "#E60023", color: "white", outline: "none" }}
               title="Add image to your Pinterest account"
             >
               Pinterest
