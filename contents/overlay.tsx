@@ -120,11 +120,13 @@ export default function GalleryOverlay() {
       const sorted = Array.from(imgSet).sort();
 
       const filtered = sorted.map((url) => {
+        const isGif = url.endsWith(`.gif`);
         const img = new Image();
         img.src = url;
         const pr = new Promise((resolve, reject) => {
           img.onload = () => {
-            if ((img.naturalHeight > 100, img.naturalWidth > 100)) {
+            // To allow gifs of anysize or other images with > 100x100
+            if (isGif || (img.naturalHeight > 100, img.naturalWidth > 100)) {
               resolve(url);
             } else {
               reject(new Error("too small"));
