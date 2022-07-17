@@ -46,7 +46,7 @@ const Content = styled(Dialog.Content, {
 });
 
 const TopBar = styled(`div`, {
-  height: 50,
+  height: "50px",
   background: "lightgray",
   position: "sticky",
   top: 0,
@@ -55,14 +55,14 @@ const TopBar = styled(`div`, {
 const GalleryGrid = styled(`div`, {
   padding: 10,
   display: "grid",
-  gridTemplateColumns: `repeat(auto-fit, minmax(100px, 1fr))`,
+  gridTemplateColumns: `repeat(auto-fill, minmax(100px, 1fr))`,
   gap: `10px 10px`,
-  height: "calc(100% - 50px)",
+  maxHeight: "calc(100% - 70px)",
   overflowY: "auto",
 });
 
 const StyledImage = styled(`img`, {
-  height: 200,
+  width: "100%",
   objectFit: "cover",
   aspectRatio: "9/16",
 });
@@ -147,7 +147,6 @@ export default function GalleryOverlay() {
 
   return (
     <Dialog.Root open={showAlert} defaultOpen={false}>
-      <Dialog.Trigger />
       <Dialog.Portal>
         <Overlay>
           <Content>
