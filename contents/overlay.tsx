@@ -5,6 +5,12 @@ import cssText from "data-text:~/style.css";
 import type { PlasmoContentScript } from "plasmo";
 import { useEffect, useMemo, useState } from "react";
 
+const withTimeout = (millis, promise) => {
+  const timeout = new Promise((resolve, reject) =>
+    setTimeout(() => reject(`Timed out after ${millis} ms.`), millis)
+  );
+  return Promise.race([promise, timeout]);
+};
 export const config: PlasmoContentScript = {
   matches: ["<all_urls>"],
   all_frames: true,
@@ -51,11 +57,36 @@ const GalleryGrid = styled(`div`, {
   display: "grid",
   gridTemplateColumns: `repeat(auto-fit, minmax(100px, 1fr))`,
   gap: `10px 10px`,
-  overflowY: "auto",
   height: "calc(100% - 50px)",
+  overflowY: "auto",
 });
 
-export default function OptionsPrice() {
+const StyledImage = styled(`img`, {
+  height: 200,
+  objectFit: "cover",
+  aspectRatio: "9/16",
+});
+
+async function getAnchorLinks() {
+  const selectors = ["jpg", "jpeg", "png", "gif", "webp"].map(
+    (ext) => `a[href$='${ext}']`
+  );
+  const nodes = selectors.flatMap((selector) =>
+    Array.from(document.querySelectorAll(selector))
+  );
+
+  const links = nodes.map((node) => node.getAttribute("href"));
+
+  return links;
+}
+async function getImgTags() {
+  const nodes = Array.from(document.querySelectorAll("img"));
+  const links = nodes.map((node) => node.getAttribute("src"));
+
+  return links;
+}
+
+export default function GalleryOverlay() {
   console.log("Content Script overlay loaded");
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [images, setImages] = useState<string[]>([]);
@@ -69,7 +100,6 @@ export default function OptionsPrice() {
         return;
       }
       if (message.task === "show-gallery") {
-        // console.log("Sent Data: ", message.data);
         if (!showAlert) {
           setImages(message.data ?? []);
           setShowAlert(true);
@@ -82,13 +112,18 @@ export default function OptionsPrice() {
     if (!showAlert) {
       return;
     }
+
     async function filterImagesBySize() {
-      const filtered = images.map((url) => {
+      const fromLinks = await getAnchorLinks();
+      const fromImgTag = await getImgTags();
+      const imgSet = new Set([...fromImgTag, ...fromLinks]);
+      const sorted = Array.from(imgSet).sort();
+
+      const filtered = sorted.map((url) => {
         const img = new Image();
         img.src = url;
-        return new Promise((resolve, reject) => {
+        const pr = new Promise((resolve, reject) => {
           img.onload = () => {
-            console.log("img.naturalHeight:", img.naturalHeight);
             if ((img.naturalHeight > 100, img.naturalWidth > 100)) {
               resolve(url);
             } else {
@@ -96,15 +131,15 @@ export default function OptionsPrice() {
             }
           };
         });
+        return withTimeout(2000, pr);
       });
 
       const results = await Promise.allSettled(filtered);
-      console.log("results:", results);
+
       const imagesBySize = results
         .filter((result) => result.status === "fulfilled")
         .map((result) => (result as PromiseFulfilledResult<string>).value);
 
-      console.log("imagesBySize:", imagesBySize);
       setFilteredImages(imagesBySize);
     }
     filterImagesBySize();
@@ -120,17 +155,12 @@ export default function OptionsPrice() {
               <Dialog.Close
                 aria-label="Close"
                 onClick={() => setShowAlert(false)}>
-                <Cross1Icon />
+                <Cross1Icon /> Close
               </Dialog.Close>
             </TopBar>
             <GalleryGrid>
               {filteredImages.map((url) => (
-                <img
-                  key={url}
-                  src={url}
-                  alt={url}
-                  style={{ height: 200, width: 100, objectFit: "scale-down" }}
-                />
+                <StyledImage key={url} src={url} alt={url} />
               ))}
             </GalleryGrid>
           </Content>
