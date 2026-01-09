@@ -1,9 +1,10 @@
-/** @type {import('tailwindcss/tailwind-config').TailwindConfig} */
-module.exports = {
-  mode: "jit",
-  darkMode: "class",
-  content: ["./**/*.{ts,tsx}"],
-  theme: {},
-  variants: { extend: { typography: ["dark"] } },
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
   plugins: [],
-};
+}

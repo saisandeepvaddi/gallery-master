@@ -1,42 +1,33 @@
 {
   "name": "gallery-master",
-  "displayName": "Gallery master",
-  "version": "0.0.0",
-  "description": "A basic Plasmo extension.",
+  "displayName": "Gallery Master",
+  "version": "1.0.0",
+  "description": "Extract and view all images from any webpage in a clean gallery overlay",
   "author": "saisandeepvaddi",
+  "type": "module",
   "scripts": {
-    "dev": "plasmo dev",
-    "build": "plasmo build"
+    "dev": "vite build --watch --mode development",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite build --mode development",
+    "package": "pnpm build && cd dist && zip -r ../gallery-master.zip .",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^0.1.7",
-    "@radix-ui/react-icons": "^1.1.1",
-    "@stitches/react": "^1.2.8",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tailwindcss": "^3.1.4"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "3.2.0",
-    "@types/chrome": "0.0.191",
-    "@types/node": "18.0.1",
-    "@types/react": "18.0.14",
-    "@types/react-dom": "18.0.5",
-    "plasmo": "0.45.2",
-    "postcss": "^8.4.14",
-    "prettier": "2.7.1",
-    "typescript": "4.7.4"
-  },
-  "manifest": {
-    "host_permissions": [
-      "https://*/*"
-    ],
-    "permissions": [
-      "activeTab",
-      "downloads",
-      "storage",
-      "tabs",
-      "webRequest"
-    ]
+    "@crxjs/vite-plugin": "^2.0.0-beta.25",
+    "@types/chrome": "^0.0.280",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
   }
 }

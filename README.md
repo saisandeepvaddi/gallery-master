@@ -1,33 +1,104 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+# Gallery Master
 
-## Getting Started
+A modern Chrome extension that extracts and displays all images from any webpage in a clean, gallery-style modal overlay.
 
-First, run the development server:
+## Features
+
+- 🖼️ Extract all images from anchor links and img tags on any webpage
+- 🔍 Smart filtering: Only shows images larger than 100x100px (GIFs of any size allowed)
+- 🎨 Clean, responsive gallery grid layout
+- 🛡️ Shadow DOM isolation to prevent CSS conflicts with host pages
+- ⚡ Built with modern technologies: React 18, TypeScript, Vite, Tailwind CSS
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm (or npm)
+
+### Getting Started
+
+1. Install dependencies:
+
+```bash
+pnpm install
+```
+
+2. Run the development server with hot-reload:
 
 ```bash
 pnpm dev
-# or
-npm run dev
 ```
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
+3. Load the extension in Chrome:
+   - Open Chrome and go to `chrome://extensions/`
+   - Enable "Developer mode" (toggle in top right)
+   - Click "Load unpacked"
+   - Select the `dist` folder from this project
 
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
+The extension will automatically rebuild when you make changes to the source code.
 
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
+## Building for Production
 
-## Making production build
-
-Run the following:
+Create a production-optimized build:
 
 ```bash
 pnpm build
-# or
-npm run build
 ```
 
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
+This runs TypeScript type checking and creates an optimized build in the `dist` folder.
 
-## Submit to the webstores
+## Packaging for Distribution
 
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/workflows#submit-your-extension) and you should be on your way for automated submission!
+Create a zip file ready for Chrome Web Store submission:
+
+```bash
+pnpm package
+```
+
+This will create a `gallery-master.zip` file in the project root.
+
+## Project Structure
+
+```
+gallery-master/
+├── src/
+│   ├── background.ts       # Background service worker
+│   ├── content.tsx         # Content script with Shadow DOM
+│   ├── GalleryOverlay.tsx  # Main gallery UI component
+│   └── styles.css          # Tailwind CSS styles
+├── assets/
+│   └── icon512.png         # Extension icon
+├── manifest.json           # Chrome extension manifest (MV3)
+├── vite.config.ts          # Vite build configuration
+├── tailwind.config.js      # Tailwind CSS configuration
+└── tsconfig.json           # TypeScript configuration
+```
+
+## Tech Stack
+
+- **React 18** - UI framework
+- **TypeScript 5** - Type safety
+- **Vite 6** - Fast build tool
+- **Tailwind CSS 3** - Utility-first CSS
+- **@crxjs/vite-plugin** - Chrome extension support for Vite
+- **Shadow DOM** - Style isolation to prevent conflicts
+
+## How It Works
+
+1. Click the extension icon in your browser toolbar
+2. The content script scans the current page for:
+   - All `<img>` tags
+   - All `<a>` tags linking to image files (jpg, jpeg, png, gif, webp)
+3. Images are filtered by size (>100x100px, all GIFs allowed)
+4. A modal overlay displays all found images in a responsive grid
+5. Press ESC or click the close button to dismiss
+
+## License
+
+MIT
+
+## Author
+
+saisandeepvaddi

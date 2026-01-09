@@ -32,10 +32,12 @@ out/
 build/
 dist/
 
-# plasmo - https://www.plasmo.com
-.plasmo
+# Extension builds
+*.zip
+*.crx
+*.pem
 
-# bpp - http://bpp.browser.market/
+# Keys
 keys.json
 
 # typescript

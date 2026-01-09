@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Gallery Master",
+  "version": "1.0.0",
+  "description": "Extract and view all images from any webpage in a clean gallery overlay",
+  "author": "saisandeepvaddi",
+  "icons": {
+    "512": "assets/icon512.png"
+  },
+  "action": {
+    "default_icon": {
+      "512": "assets/icon512.png"
+    },
+    "default_title": "Gallery Master"
+  },
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content.tsx"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*/*"
+  ]
+}
