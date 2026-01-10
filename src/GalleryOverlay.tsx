@@ -1,120 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
+import { extractImagesFromPage } from './utils/imageExtractors';
+import { validateImage, type ImageItem } from './utils/imageUtils';
 
 interface GalleryOverlayProps {
   onClose: () => void;
 }
 
-interface ImageItem {
-  url: string;
-  selected: boolean;
-  width: number;
-  height: number;
-}
-
-const withTimeout = <T,>(millis: number, promise: Promise<T>): Promise<T> => {
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error(`Timed out after ${millis} ms.`)), millis)
-  );
-  return Promise.race([promise, timeout]);
-};
-
-async function getAnchorLinks(): Promise<string[]> {
-  const selectors = ['jpg', 'jpeg', 'png', 'gif', 'webp'].map(
-    (ext) => `a[href$='${ext}']`
-  );
-  const nodes = selectors.flatMap((selector) =>
-    Array.from(document.querySelectorAll<HTMLAnchorElement>(selector))
-  );
-
-  const links = nodes
-    .map((node) => node.getAttribute('href'))
-    .filter((href): href is string => href !== null);
-
-  return links;
-}
-
-function getLargestImageFromSrcset(srcset: string): string | null {
-  if (!srcset) return null;
-
-  // Parse srcset: "image1.jpg 100w, image2.jpg 200w, image3.jpg 500w"
-  const sources = srcset.split(',').map((s) => s.trim());
-  let largestUrl = '';
-  let largestWidth = 0;
-
-  for (const source of sources) {
-    const parts = source.split(/\s+/);
-    const url = parts[0];
-    const descriptor = parts[1] || '';
-
-    // Extract width from descriptor (e.g., "500w" or "2x")
-    let width = 0;
-    if (descriptor.endsWith('w')) {
-      width = parseInt(descriptor);
-    } else if (descriptor.endsWith('x')) {
-      // For pixel density descriptors, estimate relative size
-      width = parseFloat(descriptor) * 1000;
-    }
-
-    if (width > largestWidth) {
-      largestWidth = width;
-      largestUrl = url;
-    }
-  }
-
-  return largestUrl || null;
-}
-
-async function getImgTags(): Promise<string[]> {
-  const nodes = Array.from(document.querySelectorAll<HTMLImageElement>('img'));
-  const links = nodes
-    .map((node) => {
-      // Try to get the largest image from srcset first
-      const srcset = node.getAttribute('srcset');
-      if (srcset) {
-        const largestSrc = getLargestImageFromSrcset(srcset);
-        if (largestSrc) return largestSrc;
-      }
-      // Fall back to regular src
-      return node.getAttribute('src');
-    })
-    .filter((src): src is string => src !== null);
-
-  return links;
-}
-
 async function loadImageWithDimensions(
   url: string,
   isGif: boolean,
-  minSize: number
+  minSize: number,
+  maxSize: number
 ): Promise<ImageItem | null> {
-  const img = new Image();
-  img.src = url;
-
-  const pr = new Promise<ImageItem>((resolve, reject) => {
-    img.onload = () => {
-      // Allow gifs of any size or other images with size >= minSize
-      if (
-        isGif ||
-        (img.naturalHeight >= minSize && img.naturalWidth >= minSize)
-      ) {
-        resolve({
-          url,
-          selected: false,
-          width: img.naturalWidth,
-          height: img.naturalHeight,
-        });
-      } else {
-        reject(new Error('Image too small'));
-      }
-    };
-    img.onerror = () => reject(new Error('Failed to load image'));
-  });
-
-  try {
-    return await withTimeout(2000, pr);
-  } catch {
-    return null;
+  // Use the validateImage utility from imageUtils
+  // For GIFs, we'll validate but ignore size constraints
+  if (isGif) {
+    // Load GIF without size restrictions
+    return validateImage(url, 0, Infinity, 2000);
   }
+
+  // For other images, apply size constraints
+  return validateImage(url, minSize, maxSize, 2000);
 }
 
 async function autoScrollPage(
@@ -148,15 +54,16 @@ async function autoScrollPage(
   });
 }
 
-async function filterImagesBySize(minSize: number): Promise<ImageItem[]> {
-  const fromLinks = await getAnchorLinks();
-  const fromImgTag = await getImgTags();
-  const imgSet = new Set([...fromImgTag, ...fromLinks]);
-  const sorted = Array.from(imgSet).sort();
+async function filterImagesBySize(
+  minSize: number,
+  maxSize: number
+): Promise<ImageItem[]> {
+  // Use the new domain-specific extractor system
+  const imageUrls = await extractImagesFromPage();
 
-  const promises = sorted.map((url) => {
+  const promises = imageUrls.map((url) => {
     const isGif = url.toLowerCase().endsWith('.gif');
-    return loadImageWithDimensions(url, isGif, minSize);
+    return loadImageWithDimensions(url, isGif, minSize, maxSize);
   });
 
   const results = await Promise.allSettled(promises);
@@ -207,6 +114,7 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
 
   const loadImages = async (
     minSize: number,
+    maxSize: number,
     withAutoScroll: boolean = false
   ) => {
     setIsReloading(true);
@@ -219,7 +127,7 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
         setIsAutoScrolling(false);
       }
 
-      const loadedImages = await filterImagesBySize(minSize);
+      const loadedImages = await filterImagesBySize(minSize, maxSize);
       setImages(loadedImages);
     } catch (error) {
       console.error('Error loading images:', error);
@@ -232,11 +140,11 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
 
   useEffect(() => {
     // Initial load with auto-scroll
-    loadImages(minImageSize, true);
+    loadImages(minImageSize, maxImageSize, true);
   }, []);
 
   const handleReload = () => {
-    loadImages(minImageSize, true);
+    loadImages(minImageSize, maxImageSize, true);
   };
 
   const filteredImages = images.filter(
@@ -309,7 +217,7 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
   };
 
   // Lightbox functions
-  const currentImage = filteredImages[currentIndex];
+  const currentImage = filteredImages[currentIndex] || filteredImages[0];
 
   const goToNext = () => {
     if (currentIndex < filteredImages.length - 1) {
@@ -451,22 +359,14 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
     }
   };
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget && currentView === 'gallery') {
-      onClose();
-    }
-  };
-
   return (
     <div
-      className='fixed inset-0 bg-black/60 flex items-center justify-center p-4'
-      style={{ zIndex: 2147483640 }}
-      onClick={handleOverlayClick}
+      className='fixed inset-0 flex flex-col overflow-hidden'
+      style={{
+        zIndex: 2147483640,
+        backgroundColor: currentView === 'lightbox' ? '#000000' : 'transparent'
+      }}
     >
-      <div
-        className='bg-white rounded-lg flex flex-col overflow-hidden shadow-2xl relative'
-        style={{ width: '90%', height: '90%', maxWidth: '1800px' }}
-      >
         {/* Gallery View */}
         <div
           style={{
@@ -476,6 +376,7 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
             flexDirection: 'column',
             opacity: currentView === 'gallery' ? 1 : 0,
             transition: 'opacity 300ms ease-in-out',
+            backgroundColor: '#ffffff',
           }}
         >
           {/* Top Controls Bar */}
@@ -894,7 +795,6 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
             navigate | Double-click: reset | ESC: close
           </div>
         </div>
-      </div>
     </div>
   );
 }
