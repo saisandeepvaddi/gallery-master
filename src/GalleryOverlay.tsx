@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { extractImagesFromPage } from './utils/imageExtractors';
 import { validateImage, type ImageItem } from './utils/imageUtils';
+import { useDebounce } from './utils/useDebounce';
 
 interface GalleryOverlayProps {
   onClose: () => void;
@@ -112,6 +113,11 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
   const imageRef = useRef<HTMLImageElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
 
+  // Debounced values for auto-refetch (wait 1 second after user stops typing)
+  const debouncedMinSize = useDebounce(minImageSize, 1000);
+  const debouncedMaxSize = useDebounce(maxImageSize, 1000);
+  const debouncedScrollDuration = useDebounce(autoScrollDuration, 1000);
+
   const loadImages = async (
     minSize: number,
     maxSize: number,
@@ -138,10 +144,19 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
     }
   };
 
+  // Initial load with auto-scroll
   useEffect(() => {
-    // Initial load with auto-scroll
     loadImages(minImageSize, maxImageSize, true);
   }, []);
+
+  // Auto-refetch when debounced values change (after user stops typing for 1 second)
+  useEffect(() => {
+    // Skip the initial render (already handled by the initial load effect)
+    if (loading) return;
+
+    // Refetch with the new debounced values
+    loadImages(debouncedMinSize, debouncedMaxSize, debouncedScrollDuration > 0);
+  }, [debouncedMinSize, debouncedMaxSize, debouncedScrollDuration]);
 
   const handleReload = () => {
     loadImages(minImageSize, maxImageSize, true);
@@ -379,70 +394,42 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
             backgroundColor: '#ffffff',
           }}
         >
-          {/* Top Controls Bar */}
-          <div className='flex-shrink-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4'>
-            <div className='flex items-center justify-between mb-3'>
-              <h2 className='text-2xl font-bold'>Gallery Master</h2>
-              <button
-                onClick={onClose}
-                className='flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors font-medium'
-                aria-label='Close gallery'
-              >
-                <svg
-                  width='16'
-                  height='16'
-                  viewBox='0 0 15 15'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path
-                    d='M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z'
-                    fill='currentColor'
-                    fillRule='evenodd'
-                    clipRule='evenodd'
-                  />
-                </svg>
-                Close (ESC)
-              </button>
-            </div>
-
-            {/* Auto-scroll Progress */}
+          {/* Compact Top Controls Bar */}
+          <div className='flex-shrink-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2.5'>
+            {/* Auto-scroll Progress Bar */}
             {isAutoScrolling && (
-              <div className='mb-3'>
-                <div className='flex items-center justify-between text-xs mb-1'>
-                  <span>Auto-scrolling to load dynamic images...</span>
-                  <span>{Math.round(scrollProgress)}%</span>
-                </div>
-                <div className='w-full bg-white/20 rounded-full h-2'>
+              <div className='mb-2'>
+                <div className='w-full bg-white/20 rounded-full h-1.5'>
                   <div
-                    className='bg-white h-2 rounded-full transition-all duration-200'
+                    className='bg-white h-1.5 rounded-full transition-all duration-200'
                     style={{ width: `${scrollProgress}%` }}
                   />
                 </div>
               </div>
             )}
 
-            {/* Controls Row */}
-            <div className='grid grid-cols-1 lg:grid-cols-12 gap-4 text-sm'>
+            {/* Single Row with All Controls */}
+            <div className='flex items-center gap-3 text-xs'>
+              {/* Title */}
+              <span className='font-bold text-sm mr-2'>Gallery</span>
+
               {/* Column Count */}
-              <div className='lg:col-span-2 flex items-center gap-2'>
-                <label className='font-medium whitespace-nowrap'>
-                  Columns:
-                </label>
+              <div className='flex items-center gap-1.5'>
+                <label className='font-medium'>Cols:</label>
                 <input
                   type='range'
                   min='2'
                   max='12'
                   value={columnCount}
                   onChange={(e) => setColumnCount(Number(e.target.value))}
-                  className='flex-1'
+                  className='w-16'
                 />
-                <span className='font-bold w-6 text-center'>{columnCount}</span>
+                <span className='font-bold w-5 text-center'>{columnCount}</span>
               </div>
 
               {/* Min Size */}
-              <div className='lg:col-span-2 flex items-center gap-2'>
-                <label className='font-medium whitespace-nowrap'>Min:</label>
+              <div className='flex items-center gap-1'>
+                <label className='font-medium'>Min:</label>
                 <input
                   type='number'
                   min='0'
@@ -450,19 +437,17 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
                   step='50'
                   value={minImageSize}
                   onChange={(e) => {
-                    const val =
-                      e.target.value === '' ? 0 : Number(e.target.value);
+                    const val = e.target.value === '' ? 0 : Number(e.target.value);
                     setMinImageSize(isNaN(val) ? 0 : val);
                   }}
-                  className='flex-1 px-2 py-1 rounded bg-white/20 border border-white/30 text-white placeholder-white/60'
-                  placeholder='Min px'
+                  className='w-16 px-1.5 py-0.5 text-xs rounded bg-white/20 border border-white/30 text-white placeholder-white/60'
+                  placeholder='px'
                 />
-                <span className='text-xs'>px</span>
               </div>
 
               {/* Max Size */}
-              <div className='lg:col-span-2 flex items-center gap-2'>
-                <label className='font-medium whitespace-nowrap'>Max:</label>
+              <div className='flex items-center gap-1'>
+                <label className='font-medium'>Max:</label>
                 <input
                   type='number'
                   min='100'
@@ -470,19 +455,17 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
                   step='100'
                   value={maxImageSize}
                   onChange={(e) => {
-                    const val =
-                      e.target.value === '' ? 100 : Number(e.target.value);
+                    const val = e.target.value === '' ? 100 : Number(e.target.value);
                     setMaxImageSize(isNaN(val) ? 100 : val);
                   }}
-                  className='flex-1 px-2 py-1 rounded bg-white/20 border border-white/30 text-white placeholder-white/60'
-                  placeholder='Max px'
+                  className='w-16 px-1.5 py-0.5 text-xs rounded bg-white/20 border border-white/30 text-white placeholder-white/60'
+                  placeholder='px'
                 />
-                <span className='text-xs'>px</span>
               </div>
 
               {/* Auto-scroll Duration */}
-              <div className='lg:col-span-2 flex items-center gap-2'>
-                <label className='font-medium whitespace-nowrap'>Scroll:</label>
+              <div className='flex items-center gap-1'>
+                <label className='font-medium'>Scroll:</label>
                 <input
                   type='number'
                   min='0'
@@ -490,47 +473,57 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
                   step='1'
                   value={autoScrollDuration}
                   onChange={(e) => {
-                    const val =
-                      e.target.value === '' ? 0 : Number(e.target.value);
+                    const val = e.target.value === '' ? 0 : Number(e.target.value);
                     setAutoScrollDuration(isNaN(val) ? 0 : val);
                   }}
-                  className='flex-1 px-2 py-1 rounded bg-white/20 border border-white/30 text-white placeholder-white/60'
-                  placeholder='Seconds'
+                  className='w-12 px-1.5 py-0.5 text-xs rounded bg-white/20 border border-white/30 text-white placeholder-white/60'
+                  placeholder='s'
                 />
                 <span className='text-xs'>s</span>
               </div>
 
+              {/* Spacer */}
+              <div className='flex-1'></div>
+
               {/* Actions */}
-              <div className='lg:col-span-4 flex items-center gap-2 flex-wrap'>
+              <div className='flex items-center gap-2'>
                 <button
                   onClick={selectAll}
-                  className='px-3 py-1 bg-white/20 hover:bg-white/30 rounded transition-colors font-medium'
+                  className='px-2 py-0.5 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs'
                 >
                   All
                 </button>
                 <button
                   onClick={deselectAll}
-                  className='px-3 py-1 bg-white/20 hover:bg-white/30 rounded transition-colors font-medium'
+                  className='px-2 py-0.5 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs'
                 >
                   None
                 </button>
                 <button
                   onClick={downloadSelected}
                   disabled={selectedImages.length === 0}
-                  className='px-3 py-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed rounded transition-colors font-medium'
+                  className='px-2 py-0.5 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed rounded transition-colors text-xs font-medium'
                 >
                   ⬇ {selectedImages.length}
                 </button>
                 <button
                   onClick={handleReload}
                   disabled={isReloading || isAutoScrolling}
-                  className='px-3 py-1 bg-white/20 hover:bg-white/30 disabled:bg-white/10 rounded transition-colors font-medium'
+                  className='px-2 py-0.5 bg-white/20 hover:bg-white/30 disabled:bg-white/10 rounded transition-colors text-xs'
+                  title='Reload images'
                 >
                   {isReloading ? '⟳' : '↻'}
                 </button>
-                <span className='ml-auto font-medium'>
-                  {filteredImages.length}
+                <span className='font-medium text-xs'>
+                  {filteredImages.length} imgs
                 </span>
+                <button
+                  onClick={onClose}
+                  className='px-2 py-0.5 bg-white/20 hover:bg-white/30 rounded transition-colors text-xs'
+                  title='Close (ESC)'
+                >
+                  ✕
+                </button>
               </div>
             </div>
           </div>
