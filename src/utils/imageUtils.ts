@@ -2,12 +2,9 @@
  * Shared image utility functions
  */
 
-export interface ImageItem {
-  url: string;
-  selected: boolean;
-  width: number;
-  height: number;
-}
+import type { ImageItem } from '../types/gallery';
+
+export type { ImageItem };
 
 /**
  * Extract the largest image URL from a srcset attribute

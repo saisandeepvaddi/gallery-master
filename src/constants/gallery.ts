@@ -1,0 +1,8 @@
+export const DEFAULT_AUTO_SCROLL_DURATION = 0;
+export const DEFAULT_MIN_IMAGE_SIZE = 500;
+export const DEFAULT_MAX_IMAGE_SIZE = 10000;
+export const DEFAULT_COLUMN_COUNT = 6;
+
+export const SCROLL_STEP_PIXELS = 300;
+export const SCROLL_STEP_DELAY_MS = 200;
+export const IMAGE_LOAD_TIMEOUT_MS = 2000;
