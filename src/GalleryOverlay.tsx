@@ -119,8 +119,20 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
     <div
       className='fixed inset-0 flex flex-col overflow-hidden'
       style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100%',
+        height: '100%',
         zIndex: 2147483640,
         backgroundColor: currentView === 'lightbox' ? '#000000' : 'transparent',
+        margin: 0,
+        padding: 0,
+        fontSize: '16px',
+        lineHeight: 1.5,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
       }}
     >
       {/* Gallery View */}

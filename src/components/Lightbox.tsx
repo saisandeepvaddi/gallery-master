@@ -36,12 +36,29 @@ export function Lightbox({
   onImageDoubleClick,
 }: LightboxProps) {
   return (
-    <div ref={lightboxRef}>
+    <div
+      ref={lightboxRef}
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        fontSize: '16px',
+        lineHeight: 1.5,
+      }}
+    >
       {/* Close Button */}
       <button
         onClick={onClose}
         className='absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors'
         aria-label='Close lightbox'
+        style={{
+          fontSize: '16px',
+          width: '40px',
+          height: '40px',
+          padding: '8px',
+        }}
       >
         <svg
           width='24'
@@ -61,7 +78,14 @@ export function Lightbox({
       </button>
 
       {/* Image Counter */}
-      <div className='absolute top-4 left-4 z-50 px-4 py-2 bg-black/50 rounded-lg text-white font-medium'>
+      <div
+        className='absolute top-4 left-4 z-50 px-4 py-2 bg-black/50 rounded-lg text-white font-medium'
+        style={{
+          fontSize: '14px',
+          lineHeight: 1.5,
+          fontWeight: 500,
+        }}
+      >
         {currentIndex + 1} / {images.length}
       </div>
 
@@ -176,7 +200,14 @@ export function Lightbox({
       </div>
 
       {/* Help Text */}
-      <div className='absolute bottom-28 left-1/2 -translate-x-1/2 text-white/60 text-sm bg-black/50 px-4 py-2 rounded-lg pointer-events-none'>
+      <div
+        className='absolute bottom-28 left-1/2 -translate-x-1/2 text-white/60 text-sm bg-black/50 px-4 py-2 rounded-lg pointer-events-none'
+        style={{
+          fontSize: '14px',
+          lineHeight: 1.5,
+          whiteSpace: 'nowrap',
+        }}
+      >
         Wheel on image: zoom | Wheel outside: navigate | Arrow keys: navigate |
         Double-click: reset | ESC: close
       </div>

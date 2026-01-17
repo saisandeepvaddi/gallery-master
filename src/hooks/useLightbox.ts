@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { ImageItem } from '../types/gallery';
+import { createTransform } from '../utils/isolationHelpers';
 
 export function useLightbox(images: ImageItem[]) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -14,7 +15,12 @@ export function useLightbox(images: ImageItem[]) {
 
   const applyTransform = () => {
     if (imageRef.current) {
-      imageRef.current.style.transform = `translate(${imgOffset.x}px, ${imgOffset.y}px) scale(${zoomLevel})`;
+      // Use safe transform helper to prevent invalid values
+      imageRef.current.style.transform = createTransform(
+        imgOffset.x,
+        imgOffset.y,
+        zoomLevel
+      );
       imageRef.current.style.cursor = zoomLevel > 1 ? 'grab' : 'default';
     }
   };
@@ -113,6 +119,14 @@ export function useLightbox(images: ImageItem[]) {
   // Reset zoom when image changes
   useEffect(() => {
     resetZoom();
+    // Force transform application after a brief delay to ensure image element is ready
+    const timeoutId = setTimeout(() => {
+      if (imageRef.current) {
+        imageRef.current.style.transform = createTransform(0, 0, 1);
+        imageRef.current.style.cursor = 'default';
+      }
+    }, 10);
+    return () => clearTimeout(timeoutId);
   }, [currentIndex]);
 
   // Attach wheel event listener
