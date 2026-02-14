@@ -55,12 +55,6 @@ export function useLightbox(images: ImageItem[]) {
   const handleWheel = (e: WheelEvent) => {
     const target = e.target as HTMLElement;
 
-    // Check if scrolling on thumbnail strip
-    const thumbnailStrip = target.closest('.overflow-x-auto');
-    if (thumbnailStrip) {
-      return;
-    }
-
     const isMainImage = target === imageRef.current;
 
     e.preventDefault();
