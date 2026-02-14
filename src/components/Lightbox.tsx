@@ -48,7 +48,6 @@ export function Lightbox({
         lineHeight: 1.5,
       }}
     >
-      {/* Close Button */}
       <button
         onClick={onClose}
         className='absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors'
@@ -77,7 +76,6 @@ export function Lightbox({
         </svg>
       </button>
 
-      {/* Image Counter */}
       <div
         className='absolute top-4 left-4 z-50 px-4 py-2 bg-black/50 rounded-lg text-white font-medium'
         style={{
@@ -89,14 +87,12 @@ export function Lightbox({
         {currentIndex + 1} / {images.length}
       </div>
 
-      {/* Main Image Area */}
       <div
         className='flex-1 relative w-full h-full overflow-hidden flex items-center justify-center'
         onClick={onBackdropClick}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
       >
-        {/* Navigation Arrows */}
         {currentIndex > 0 && (
           <button
             onClick={(e) => {
@@ -149,7 +145,6 @@ export function Lightbox({
           </button>
         )}
 
-        {/* Main Image */}
         {currentImage && (
           <img
             ref={imageRef}
@@ -171,7 +166,6 @@ export function Lightbox({
         )}
       </div>
 
-      {/* Bottom Thumbnail Strip */}
       <div className='flex-shrink-0 bg-black/80 border-t border-white/10'>
         <div
           className='flex gap-2 overflow-x-auto p-4'

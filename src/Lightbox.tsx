@@ -161,7 +161,6 @@ export default function Lightbox({
       className='fixed inset-0 bg-black/95 flex flex-col'
       style={{ zIndex: 2147483647 }}
     >
-      {/* Close Button */}
       <button
         onClick={onClose}
         className='absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors'
@@ -184,18 +183,15 @@ export default function Lightbox({
         </svg>
       </button>
 
-      {/* Image Counter */}
       <div className='absolute top-4 left-4 z-50 px-4 py-2 bg-black/50 rounded-lg text-white font-medium'>
         {currentIndex + 1} / {images.length}
       </div>
 
-      {/* Main Image Area */}
       <div
         className='flex-1 relative w-full h-full overflow-hidden flex items-center justify-center'
         onClick={handleBackdropClick}
         onMouseMove={handleMouseMove}
       >
-        {/* Navigation Arrows */}
         {currentIndex > 0 && (
           <button
             onClick={(e) => {
@@ -248,7 +244,6 @@ export default function Lightbox({
           </button>
         )}
 
-        {/* Image with manual zoom/pan */}
         <img
           ref={imageRef}
           src={currentImage.url}
@@ -267,7 +262,6 @@ export default function Lightbox({
         />
       </div>
 
-      {/* Bottom Thumbnail Strip */}
       <div className='flex-shrink-0 bg-black/80 border-t border-white/10'>
         <div
           className='flex gap-2 overflow-x-auto p-4'
@@ -295,7 +289,6 @@ export default function Lightbox({
         </div>
       </div>
 
-      {/* Help Text */}
       <div className='absolute bottom-28 left-1/2 -translate-x-1/2 text-white/60 text-sm bg-black/50 px-4 py-2 rounded-lg pointer-events-none'>
         Wheel on image: zoom | Wheel outside: navigate | Arrow keys: navigate |
         Double-click: reset | ESC: close

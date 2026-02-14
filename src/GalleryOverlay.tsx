@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import { GalleryHeader } from './components/GalleryHeader';
+import { useEffect, useRef, useState } from 'react';
 import { GalleryGrid } from './components/GalleryGrid';
+import { GalleryHeader } from './components/GalleryHeader';
 import { Lightbox } from './components/Lightbox';
-import { useImageLoader } from './hooks/useImageLoader';
-import { useLightbox } from './hooks/useLightbox';
 import {
   DEFAULT_AUTO_SCROLL_DURATION,
-  DEFAULT_MIN_IMAGE_SIZE,
-  DEFAULT_MAX_IMAGE_SIZE,
   DEFAULT_COLUMN_COUNT,
+  DEFAULT_MAX_IMAGE_SIZE,
+  DEFAULT_MIN_IMAGE_SIZE,
 } from './constants/gallery';
-import type { ViewMode, LayoutMode } from './types/gallery';
+import { useImageLoader } from './hooks/useImageLoader';
+import { useLightbox } from './hooks/useLightbox';
+import type { LayoutMode, ViewMode } from './types/gallery';
 
 interface GalleryOverlayProps {
   onClose: () => void;
@@ -22,7 +22,7 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
   const [minImageSize, setMinImageSize] = useState(DEFAULT_MIN_IMAGE_SIZE);
   const [maxImageSize, setMaxImageSize] = useState(DEFAULT_MAX_IMAGE_SIZE);
   const [autoScrollDuration, setAutoScrollDuration] = useState(
-    DEFAULT_AUTO_SCROLL_DURATION
+    DEFAULT_AUTO_SCROLL_DURATION,
   );
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('grid');
 
@@ -132,10 +132,10 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
         padding: 0,
         fontSize: '16px',
         lineHeight: 1.5,
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
       }}
     >
-      {/* Gallery View */}
       <div
         style={{
           position: 'absolute',
@@ -169,7 +169,6 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
           onClose={onClose}
         />
 
-        {/* Gallery Content */}
         <div
           ref={galleryScrollRef}
           className='flex-1 overflow-y-auto p-6 bg-gray-50'
@@ -185,7 +184,6 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
         </div>
       </div>
 
-      {/* Lightbox View */}
       <div
         style={{
           position: 'absolute',

@@ -48,7 +48,6 @@ export function GalleryHeader({
       <div className='flex items-center gap-3 text-xs'>
         <span className='font-bold text-sm mr-2'>Gallery</span>
 
-        {/* Column Count */}
         <div className='flex items-center gap-1.5'>
           <label className='font-medium'>Cols:</label>
           <input
@@ -62,7 +61,6 @@ export function GalleryHeader({
           <span className='font-bold w-5 text-center'>{columnCount}</span>
         </div>
 
-        {/* Min Size */}
         <div className='flex items-center gap-1'>
           <label className='font-medium'>Min:</label>
           <input
@@ -80,7 +78,6 @@ export function GalleryHeader({
           />
         </div>
 
-        {/* Max Size */}
         <div className='flex items-center gap-1'>
           <label className='font-medium'>Max:</label>
           <input
@@ -98,7 +95,6 @@ export function GalleryHeader({
           />
         </div>
 
-        {/* Auto-scroll Duration */}
         <div className='flex items-center gap-1'>
           <label className='font-medium'>Scroll:</label>
           <input
@@ -117,7 +113,6 @@ export function GalleryHeader({
           <span className='text-xs'>s</span>
         </div>
 
-        {/* Layout Mode Toggle */}
         <div className='flex items-center gap-1'>
           <label className='font-medium'>Layout:</label>
           <button
@@ -133,10 +128,8 @@ export function GalleryHeader({
           </button>
         </div>
 
-        {/* Spacer */}
         <div className='flex-1'></div>
 
-        {/* Actions */}
         <div className='flex items-center gap-2'>
           <button
             onClick={onSelectAll}
