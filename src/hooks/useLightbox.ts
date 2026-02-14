@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { hideGallery } from '../content';
 import type { ImageItem } from '../types/gallery';
 import { createTransform } from '../utils/isolationHelpers';
 
@@ -99,7 +98,6 @@ export function useLightbox(images: ImageItem[]) {
   const handleLightboxBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       resetZoom();
-      hideGallery();
     }
   };
 
