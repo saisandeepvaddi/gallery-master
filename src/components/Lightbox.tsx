@@ -198,19 +198,6 @@ export function Lightbox({
           ))}
         </div>
       </div>
-
-      {/* Help Text */}
-      <div
-        className='absolute bottom-28 left-1/2 -translate-x-1/2 text-white/60 text-sm bg-black/50 px-4 py-2 rounded-lg pointer-events-none'
-        style={{
-          fontSize: '14px',
-          lineHeight: 1.5,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        Wheel on image: zoom | Wheel outside: navigate | Arrow keys: navigate |
-        Double-click: reset | ESC: close
-      </div>
     </div>
   );
 }

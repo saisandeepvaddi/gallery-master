@@ -76,7 +76,7 @@ function showGallery() {
     reactRoot.render(
       <React.StrictMode>
         <GalleryOverlay onClose={hideGallery} />
-      </React.StrictMode>
+      </React.StrictMode>,
     );
   }
 
@@ -92,11 +92,13 @@ function showGallery() {
   }
 }
 
-function hideGallery() {
+export function hideGallery() {
   // Restore original body styles
   if (shadowHost) {
-    const originalOverflow = shadowHost.getAttribute('data-original-overflow') || '';
-    const originalPosition = shadowHost.getAttribute('data-original-position') || '';
+    const originalOverflow =
+      shadowHost.getAttribute('data-original-overflow') || '';
+    const originalPosition =
+      shadowHost.getAttribute('data-original-position') || '';
     document.body.style.overflow = originalOverflow;
     document.body.style.position = originalPosition;
   }
