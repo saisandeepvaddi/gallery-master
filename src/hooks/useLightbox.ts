@@ -8,6 +8,7 @@ export function useLightbox(images: ImageItem[]) {
   const [imgOffset, setImgOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
+  const lastMouseDownRef = useRef({ x: 0, y: 0 });
   const imageRef = useRef<HTMLImageElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
 
@@ -95,10 +96,17 @@ export function useLightbox(images: ImageItem[]) {
     setIsDragging(false);
   };
 
-  const handleLightboxBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      resetZoom();
-    }
+  const handleBackdropMouseDown = (e: React.MouseEvent) => {
+    lastMouseDownRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const shouldCloseOnBackdropClick = (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget) return false;
+    const dx = e.clientX - lastMouseDownRef.current.x;
+    const dy = e.clientY - lastMouseDownRef.current.y;
+    if (Math.hypot(dx, dy) > 5) return false;
+    resetZoom();
+    return true;
   };
 
   const handleImageDoubleClick = () => {
@@ -147,7 +155,8 @@ export function useLightbox(images: ImageItem[]) {
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
-    handleLightboxBackdropClick,
+    handleBackdropMouseDown,
+    shouldCloseOnBackdropClick,
     handleImageDoubleClick,
   };
 }

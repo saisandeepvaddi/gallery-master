@@ -14,6 +14,7 @@ interface LightboxProps {
   onMouseDown: (e: React.MouseEvent<HTMLImageElement>) => void;
   onMouseMove: (e: React.MouseEvent) => void;
   onMouseUp: () => void;
+  onBackdropMouseDown: (e: React.MouseEvent) => void;
   onBackdropClick: (e: React.MouseEvent) => void;
   onImageDoubleClick: () => void;
 }
@@ -32,6 +33,7 @@ export function Lightbox({
   onMouseDown,
   onMouseMove,
   onMouseUp,
+  onBackdropMouseDown,
   onBackdropClick,
   onImageDoubleClick,
 }: LightboxProps) {
@@ -90,6 +92,7 @@ export function Lightbox({
       <div
         className='flex-1 relative w-full h-full overflow-hidden flex items-center justify-center'
         onClick={onBackdropClick}
+        onMouseDown={onBackdropMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
       >

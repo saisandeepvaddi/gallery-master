@@ -210,10 +210,11 @@ export default function GalleryOverlay({ onClose }: GalleryOverlayProps) {
           onMouseDown={lightbox.handleMouseDown}
           onMouseMove={lightbox.handleMouseMove}
           onMouseUp={lightbox.handleMouseUp}
+          onBackdropMouseDown={lightbox.handleBackdropMouseDown}
           onBackdropClick={(e) => {
-            lightbox.handleLightboxBackdropClick(e);
-
-            closeLightbox();
+            if (lightbox.shouldCloseOnBackdropClick(e)) {
+              closeLightbox();
+            }
           }}
           onImageDoubleClick={lightbox.handleImageDoubleClick}
         />
